@@ -4,105 +4,77 @@ const DEV_PASSWORD = "7995"
 let allGames = []
 
 document.addEventListener("DOMContentLoaded", () => {
-
-loadGames()
-loadUpdates()
-
+    loadGames()
+    loadUpdates()
 })
 
-/* LOAD GAMES */
+/* ---------------- LOAD GAMES ---------------- */
 
 function loadGames(){
 
-// try loading from normal folder first
 fetch("games/games.json")
-
-.then(response => {
-
-if(!response.ok){
-throw new Error("games folder not found")
-}
-
-return response.json()
-
+.then(res => {
+    if(!res.ok) throw new Error("games folder missing")
+    return res.json()
 })
-
 .then(games => {
-
-allGames = games
-displayGames(games)
-
+    allGames = games
+    displayGames(games)
 })
-
-// if that fails, try the folder with a space
 .catch(() => {
 
-fetch("games copy/games.json")
-
-.then(response => {
-
-if(!response.ok){
-throw new Error("games.json not found")
-}
-
-return response.json()
-
-})
-
-.then(games => {
-
-allGames = games
-displayGames(games)
-
-})
-
-.catch(error => {
-
-console.log("Game loading error:", error)
-
-})
+    /* fallback if folder is named "games copy" */
+    fetch("games copy/games.json")
+    .then(res => res.json())
+    .then(games => {
+        allGames = games
+        displayGames(games)
+    })
+    .catch(err => {
+        console.warn("Game loading error:", err)
+    })
 
 })
 
 }
 
-/* SHOW GAMES */
+/* ---------------- SHOW GAMES ---------------- */
 
 function displayGames(games){
 
 const container = document.getElementById("games")
-
 if(!container) return
 
 container.innerHTML = ""
 
 games.forEach(game => {
 
-const card = document.createElement("div")
-card.className = "game"
+    const card = document.createElement("div")
+    card.className = "game"
 
-const title = document.createElement("h3")
-title.textContent = game.title
+    const title = document.createElement("h3")
+    title.textContent = game.title
 
-const button = document.createElement("button")
-button.textContent = "Play"
+    const button = document.createElement("button")
+    button.textContent = "Play"
 
-button.onclick = () => startGame(game.path)
+    button.onclick = () => startGame(game.path)
 
-card.appendChild(title)
-card.appendChild(button)
+    card.appendChild(title)
+    card.appendChild(button)
 
-container.appendChild(card)
+    container.appendChild(card)
 
 })
 
 }
 
-/* START GAME */
+/* ---------------- START GAME ---------------- */
 
 function startGame(path){
 
 const player = document.getElementById("player")
+if(!player) return
 
 player.innerHTML = `
 <button onclick="exitGame()">⬅ Exit Game</button>
@@ -111,27 +83,27 @@ player.innerHTML = `
 
 }
 
-/* EXIT GAME */
+/* ---------------- EXIT GAME ---------------- */
 
 function exitGame(){
-
-document.getElementById("player").innerHTML = "<p>No game loaded</p>"
-
+const player = document.getElementById("player")
+if(player) player.innerHTML = "<p>No game loaded</p>"
 }
 
-/* PAGE SWITCHING */
+/* ---------------- PAGE SWITCHING ---------------- */
 
 function showPage(page){
 
-const pages = document.querySelectorAll(".page")
+document.querySelectorAll(".page").forEach(p=>{
+    p.style.display="none"
+})
 
-pages.forEach(p => p.style.display = "none")
-
-document.getElementById(page).style.display = "block"
+const target = document.getElementById(page)
+if(target) target.style.display="block"
 
 }
 
-/* LOGIN */
+/* ---------------- LOGIN ---------------- */
 
 function checkSitePassword(){
 
@@ -139,20 +111,20 @@ const input = document.getElementById("sitePassword").value
 
 if(input === SITE_PASSWORD){
 
-document.getElementById("loginScreen").style.display = "none"
-document.getElementById("siteContent").style.display = "block"
+document.getElementById("loginScreen").style.display="none"
+document.getElementById("siteContent").style.display="block"
 
 showPage("gamesPage")
 
 }else{
 
-document.getElementById("loginError").textContent = "Wrong password"
+document.getElementById("loginError").textContent="Wrong password"
 
 }
 
 }
 
-/* REQUEST SYSTEM */
+/* ---------------- REQUEST SYSTEM ---------------- */
 
 function submitRequest(){
 
@@ -165,13 +137,13 @@ let requests = JSON.parse(localStorage.getItem("requests")) || []
 
 requests.push({name,games,ideas,bug})
 
-localStorage.setItem("requests", JSON.stringify(requests))
+localStorage.setItem("requests",JSON.stringify(requests))
 
 alert("Request submitted")
 
 }
 
-/* DEV LOGIN */
+/* ---------------- DEV LOGIN ---------------- */
 
 function devLogin(){
 
@@ -186,23 +158,22 @@ loadRequests()
 
 }
 
-/* LOAD REQUESTS */
+/* ---------------- LOAD REQUESTS ---------------- */
 
 function loadRequests(){
 
 const list = document.getElementById("devRequests")
-
 if(!list) return
 
-list.innerHTML = ""
+list.innerHTML=""
 
 const requests = JSON.parse(localStorage.getItem("requests")) || []
 
-requests.forEach(r => {
+requests.forEach(r=>{
 
-const item = document.createElement("li")
+const item=document.createElement("li")
 
-item.innerHTML = `
+item.innerHTML=`
 <b>Name:</b> ${r.name}<br>
 <b>Games:</b> ${r.games}<br>
 <b>Ideas:</b> ${r.ideas}<br>
@@ -215,21 +186,20 @@ list.appendChild(item)
 
 }
 
-/* UPDATE SYSTEM */
+/* ---------------- UPDATE SYSTEM ---------------- */
 
 function addUpdate(){
 
 const text = document.getElementById("updateInput").value.trim()
-
-if(text === "") return
+if(text==="") return
 
 let updates = JSON.parse(localStorage.getItem("updates")) || []
 
 updates.unshift(text)
 
-localStorage.setItem("updates", JSON.stringify(updates))
+localStorage.setItem("updates",JSON.stringify(updates))
 
-document.getElementById("updateInput").value = ""
+document.getElementById("updateInput").value=""
 
 loadUpdates()
 
@@ -237,21 +207,17 @@ loadUpdates()
 
 function loadUpdates(){
 
-const list = document.getElementById("updateList")
-
+const list=document.getElementById("updateList")
 if(!list) return
 
-list.innerHTML = ""
+list.innerHTML=""
 
 const updates = JSON.parse(localStorage.getItem("updates")) || []
 
-updates.forEach(u => {
-
-const item = document.createElement("li")
-item.textContent = u
-
-list.appendChild(item)
-
+updates.forEach(u=>{
+    const item=document.createElement("li")
+    item.textContent=u
+    list.appendChild(item)
 })
 
 }
