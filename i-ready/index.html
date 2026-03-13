@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>The Cats Arcade</title>
+
+<link rel="stylesheet" href="css/styles.css">
+
+<style>
+
+#lockScreen{
+position:fixed;
+top:0;
+left:0;
+width:100vw;
+height:100vh;
+background:black;
+color:#00ffcc;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-family:monospace;
+z-index:9999;
+}
+
+#siteContent{
+display:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- PASSWORD SCREEN -->
+
+<div id="lockScreen">
+
+<h1>ENTER PASSWORD</h1>
+
+<input id="passInput" type="password" placeholder="Passcode">
+
+<button onclick="unlockSite()">Enter</button>
+
+<p id="errorText"></p>
+
+</div>
+
+<!-- WEBSITE -->
+
+<div id="siteContent">
+
+<header>
+
+<h1>The Cats Arcade</h1>
+<p>Click play to start a game.</p>
+
+</header>
+
+<nav id="navbar">
+
+<button onclick="showPage('gamesPage')">Games</button>
+<button onclick="showPage('settingsPage')">Settings</button>
+<button onclick="showPage('requestPage')">Requests</button>
+
+</nav>
+
+<main>
+
+<!-- GAMES PAGE -->
+
+<div id="gamesPage" class="page">
+
+<section class="card">
+
+<h2>Available Games</h2>
+
+<div id="games"></div>
+
+</section>
+
+<section class="card">
+
+<h2>Play Area</h2>
+
+<div id="player">
+<p>No game loaded.</p>
+</div>
+
+</section>
+
+</div>
+
+<!-- SETTINGS PAGE -->
+
+<div id="settingsPage" class="page">
+
+<section class="card">
+
+<h2>Settings</h2>
+
+<label>Background Color</label><br>
+<input type="color" id="bgColor">
+
+<br><br>
+
+<label>Panic Key</label><br>
+<input type="text" id="panicKey" placeholder="Example: `">
+
+<br><br>
+
+<button onclick="saveSettings()">Save Settings</button>
+
+</section>
+
+</div>
+
+<!-- FORM PAGE -->
+
+<div id="requestPage" class="page">
+
+<section class="card">
+
+<h2>Game Requests</h2>
+
+<iframe
+src="https://docs.google.com/forms/d/e/1FAIpQLSeR4XuPz3IPx8sJ8oe7DFxDOrXZZHuoVF9zgKFstM0YfE5qOA/viewform?embedded=true"
+height="650">
+Loading…
+</iframe>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+<script src="js/app.js"></script>
+
+<script>
+
+function unlockSite(){
+
+const pass = document.getElementById("passInput").value
+
+if(pass === "012312"){
+
+document.getElementById("lockScreen").style.display = "none"
+document.getElementById("siteContent").style.display = "block"
+
+}else{
+
+document.getElementById("errorText").innerText = "Wrong Passcode"
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+[
+{
+"id": "retro-bowl",
+"title": "Retro Bowl",
+"path": "games copy/retro bowl2/index.html"
+},
+{
+"id": "example-ball",
+"title": "Example Ball",
+"path": "games copy/example-ball/index.html"
+},
+{
+"id": "chroma",
+"title": "Chroma",
+"path": "games copy/chroma/index.html"
+},
+{
+"id": "geometry-dash",
+"title": "Geometry Dash",
+"path": "games copy/geometry-dash/index.html"
+},
+{
+"id": "pacman",
+"title": "Pacman",
+"path": "games copy/pacman/index.html"
+},
+{
+"id": "2048",
+"title": "2048",
+"path": "games copy/2048/index.html"
+},
+{
+"id": "slope",
+"title": "Slope",
+"path": "games copy/slope/index.html"
+},
+{
+"id": "slope-2",
+"title": "Slope 2",
+"path": "games copy/slope 2/index.html"
+},
+{
+"id": "cookie",
+"title": "Cookie Game",
+"path": "games copy/cookie/index.html"
+},
+{
+"id": "moto-classic",
+"title": "Moto Classic",
+"path": "games copy/moto-classic/index.html"
+},
+{
+"id": "moto-winter",
+"title": "Moto Winter",
+"path": "games copy/moto-winter/index.html"
+}
+]
