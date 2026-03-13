@@ -1,14 +1,48 @@
+const SITE_PASSWORD = "012312"
+const DEV_PASSWORD = "7995"
+
+let allGames = []
+
 document.addEventListener("DOMContentLoaded", () => {
+
+fetch("games copy/games.json")
+.then(r => r.json())
+.then(games => {
+
+allGames = games
+displayGames(games)
+
+})
+
+loadUpdates()
+
+})
+
+
+function checkSitePassword(){
+
+const input = document.getElementById("sitePassword").value
+
+if(input === SITE_PASSWORD){
+
+document.getElementById("loginScreen").style.display = "none"
+document.getElementById("siteContent").style.display = "block"
 
 showPage("gamesPage")
 
-loadSettings()
+}else{
 
-fetch("games copy/games.json")
-.then(response => response.json())
-.then(games => {
+document.getElementById("loginError").textContent = "Wrong password"
+
+}
+
+}
+
+
+function displayGames(games){
 
 const container = document.getElementById("games")
+
 container.innerHTML = ""
 
 games.forEach(game => {
@@ -22,12 +56,7 @@ title.textContent = game.title
 const button = document.createElement("button")
 button.textContent = "Play"
 
-button.onclick = () => {
-
-playIntro()
-startGame(game.path)
-
-}
+button.onclick = () => startGame(game.path)
 
 card.appendChild(title)
 card.appendChild(button)
@@ -36,106 +65,138 @@ container.appendChild(card)
 
 })
 
-})
+}
 
-.catch(err => console.log("Game loading error:", err))
-
-})
-
-/* GAME PLAYER */
 
 function startGame(path){
 
 const player = document.getElementById("player")
 
 player.innerHTML = `
-<button onclick="exitGame()" class="backBtn">⬅ Back</button>
-<iframe src="${path}" class="gameFrame"></iframe>
+<div id="gameContainer">
+<button onclick="exitGame()">Exit Game</button>
+<iframe src="${path}" width="100%" height="600"></iframe>
+</div>
 `
 
 }
 
+
 function exitGame(){
 
-document.getElementById("player").innerHTML = "<p>No game loaded.</p>"
+document.getElementById("player").innerHTML = "<p>No game loaded</p>"
 
 }
 
-/* INTRO VOICE */
-
-function playIntro(){
-
-const speech = new SpeechSynthesisUtterance("Welcome to The Cats Arcade")
-
-speech.rate = 0.9
-speech.pitch = 0.7
-
-speechSynthesis.speak(speech)
-
-}
-
-/* PAGE NAVIGATION */
 
 function showPage(page){
 
-const pages = document.querySelectorAll(".page")
-
-pages.forEach(p => {
-p.style.display = "none"
-})
+document.querySelectorAll(".page").forEach(p => p.style.display = "none")
 
 document.getElementById(page).style.display = "block"
 
 }
 
-/* SETTINGS */
 
-function saveSettings(){
+/* REQUEST SYSTEM */
 
-const color = document.getElementById("bgColor").value
-const key = document.getElementById("panicKey").value
+function submitRequest(){
 
-sessionStorage.setItem("bgColor", color)
-sessionStorage.setItem("panicKey", key)
+const name = document.getElementById("reqName").value
+const games = document.getElementById("reqGames").value
+const ideas = document.getElementById("reqIdeas").value
+const bug = document.getElementById("reqBug").value
 
-document.body.style.background = color
+let requests = JSON.parse(localStorage.getItem("requests")) || []
 
-}
+requests.push({name, games, ideas, bug})
 
-/* LOAD SETTINGS */
+localStorage.setItem("requests", JSON.stringify(requests))
 
-function loadSettings(){
-
-const savedColor = sessionStorage.getItem("bgColor")
-
-if(savedColor){
-document.body.style.background = savedColor
-}
+alert("Request submitted")
 
 }
 
-/* RESET SETTINGS */
 
-function resetSettings(){
+/* DEV LOGIN */
 
-sessionStorage.clear()
+function devLogin(){
 
-document.body.style.background = "#0a0a0a"
+const pass = prompt("Developer Password")
 
-alert("Settings Reset")
+if(pass === DEV_PASSWORD){
+
+showPage("devPage")
+loadRequests()
+
+}
 
 }
 
-/* PANIC KEY */
 
-document.addEventListener("keydown", function(e){
+/* VIEW REQUESTS */
 
-const panicKey = sessionStorage.getItem("panicKey") || "`"
+function loadRequests(){
 
-if(e.key === panicKey){
+const list = document.getElementById("devRequests")
+list.innerHTML = ""
 
-window.location.href = "https://classroom.google.com"
+const requests = JSON.parse(localStorage.getItem("requests")) || []
 
-}
+requests.forEach(r => {
+
+const item = document.createElement("li")
+
+item.innerHTML = `
+<b>Name:</b> ${r.name}<br>
+<b>Games:</b> ${r.games}<br>
+<b>Ideas:</b> ${r.ideas}<br>
+<b>Bug:</b> ${r.bug}
+`
+
+list.appendChild(item)
 
 })
+
+}
+
+
+/* UPDATES */
+
+function addUpdate(){
+
+const text = document.getElementById("updateInput").value
+
+if(!text) return
+
+let updates = JSON.parse(localStorage.getItem("updates")) || []
+
+updates.unshift(text)
+
+localStorage.setItem("updates", JSON.stringify(updates))
+
+loadUpdates()
+
+}
+
+
+function loadUpdates(){
+
+const list = document.getElementById("updateList")
+
+if(!list) return
+
+list.innerHTML = ""
+
+const updates = JSON.parse(localStorage.getItem("updates")) || []
+
+updates.forEach(u => {
+
+const item = document.createElement("li")
+item.textContent = u
+
+list.appendChild(item)
+
+})
+
+}
