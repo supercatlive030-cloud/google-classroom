@@ -14,6 +14,29 @@ loadUpdates()
 
 function loadGames(){
 
+// try loading from normal folder first
+fetch("games/games.json")
+
+.then(response => {
+
+if(!response.ok){
+throw new Error("games folder not found")
+}
+
+return response.json()
+
+})
+
+.then(games => {
+
+allGames = games
+displayGames(games)
+
+})
+
+// if that fails, try the folder with a space
+.catch(() => {
+
 fetch("games copy/games.json")
 
 .then(response => {
@@ -36,6 +59,8 @@ displayGames(games)
 .catch(error => {
 
 console.log("Game loading error:", error)
+
+})
 
 })
 
@@ -81,7 +106,7 @@ const player = document.getElementById("player")
 
 player.innerHTML = `
 <button onclick="exitGame()">⬅ Exit Game</button>
-<iframe src="${path}" width="100%" height="600"></iframe>
+<iframe src="${path}" width="100%" height="600" style="border:none;"></iframe>
 `
 
 }
@@ -223,7 +248,6 @@ const updates = JSON.parse(localStorage.getItem("updates")) || []
 updates.forEach(u => {
 
 const item = document.createElement("li")
-
 item.textContent = u
 
 list.appendChild(item)
