@@ -5,8 +5,27 @@ let allGames = []
 
 document.addEventListener("DOMContentLoaded", () => {
 
+loadGames()
+loadUpdates()
+
+})
+
+/* LOAD GAMES */
+
+function loadGames(){
+
 fetch("games copy/games.json")
-.then(r => r.json())
+
+.then(response => {
+
+if(!response.ok){
+throw new Error("games.json not found")
+}
+
+return response.json()
+
+})
+
 .then(games => {
 
 allGames = games
@@ -14,34 +33,21 @@ displayGames(games)
 
 })
 
-loadUpdates()
+.catch(error => {
+
+console.log("Game loading error:", error)
 
 })
 
-
-function checkSitePassword(){
-
-const input = document.getElementById("sitePassword").value
-
-if(input === SITE_PASSWORD){
-
-document.getElementById("loginScreen").style.display = "none"
-document.getElementById("siteContent").style.display = "block"
-
-showPage("gamesPage")
-
-}else{
-
-document.getElementById("loginError").textContent = "Wrong password"
-
 }
 
-}
-
+/* SHOW GAMES */
 
 function displayGames(games){
 
 const container = document.getElementById("games")
+
+if(!container) return
 
 container.innerHTML = ""
 
@@ -67,20 +73,20 @@ container.appendChild(card)
 
 }
 
+/* START GAME */
 
 function startGame(path){
 
 const player = document.getElementById("player")
 
 player.innerHTML = `
-<div id="gameContainer">
-<button onclick="exitGame()">Exit Game</button>
+<button onclick="exitGame()">⬅ Exit Game</button>
 <iframe src="${path}" width="100%" height="600"></iframe>
-</div>
 `
 
 }
 
+/* EXIT GAME */
 
 function exitGame(){
 
@@ -88,15 +94,38 @@ document.getElementById("player").innerHTML = "<p>No game loaded</p>"
 
 }
 
+/* PAGE SWITCHING */
 
 function showPage(page){
 
-document.querySelectorAll(".page").forEach(p => p.style.display = "none")
+const pages = document.querySelectorAll(".page")
+
+pages.forEach(p => p.style.display = "none")
 
 document.getElementById(page).style.display = "block"
 
 }
 
+/* LOGIN */
+
+function checkSitePassword(){
+
+const input = document.getElementById("sitePassword").value
+
+if(input === SITE_PASSWORD){
+
+document.getElementById("loginScreen").style.display = "none"
+document.getElementById("siteContent").style.display = "block"
+
+showPage("gamesPage")
+
+}else{
+
+document.getElementById("loginError").textContent = "Wrong password"
+
+}
+
+}
 
 /* REQUEST SYSTEM */
 
@@ -109,14 +138,13 @@ const bug = document.getElementById("reqBug").value
 
 let requests = JSON.parse(localStorage.getItem("requests")) || []
 
-requests.push({name, games, ideas, bug})
+requests.push({name,games,ideas,bug})
 
 localStorage.setItem("requests", JSON.stringify(requests))
 
 alert("Request submitted")
 
 }
-
 
 /* DEV LOGIN */
 
@@ -133,12 +161,14 @@ loadRequests()
 
 }
 
-
-/* VIEW REQUESTS */
+/* LOAD REQUESTS */
 
 function loadRequests(){
 
 const list = document.getElementById("devRequests")
+
+if(!list) return
+
 list.innerHTML = ""
 
 const requests = JSON.parse(localStorage.getItem("requests")) || []
@@ -160,14 +190,13 @@ list.appendChild(item)
 
 }
 
-
-/* UPDATES */
+/* UPDATE SYSTEM */
 
 function addUpdate(){
 
-const text = document.getElementById("updateInput").value
+const text = document.getElementById("updateInput").value.trim()
 
-if(!text) return
+if(text === "") return
 
 let updates = JSON.parse(localStorage.getItem("updates")) || []
 
@@ -175,10 +204,11 @@ updates.unshift(text)
 
 localStorage.setItem("updates", JSON.stringify(updates))
 
+document.getElementById("updateInput").value = ""
+
 loadUpdates()
 
 }
-
 
 function loadUpdates(){
 
@@ -193,6 +223,7 @@ const updates = JSON.parse(localStorage.getItem("updates")) || []
 updates.forEach(u => {
 
 const item = document.createElement("li")
+
 item.textContent = u
 
 list.appendChild(item)
