@@ -1,49 +1,61 @@
-body{
+/* MAIN PAGE */
 
+body{
 margin:0;
 font-family:Arial, sans-serif;
 
-/* cleaner background */
 background:linear-gradient(180deg,#0b0f1a,#05070d);
 
 color:white;
 text-align:center;
-
 }
 
-/* MAIN CARDS */
+/* HEADER */
+
+header{
+padding:20px;
+background:#0d111c;
+border-bottom:2px solid #00ffcc;
+}
+
+h1{
+margin:0;
+font-size:38px;
+color:#00ffcc;
+text-shadow:0 0 12px #00ffcc;
+}
+
+/* NAV BUTTONS */
+
+nav button{
+margin:6px;
+}
+
+/* CARDS */
 
 .card{
-
-background:rgba(18,22,35,0.85);
+background:rgba(18,22,35,0.9);
 margin:25px auto;
 padding:25px;
 border-radius:12px;
-max-width:950px;
+max-width:1000px;
 
 border:1px solid rgba(0,255,200,0.15);
 
-box-shadow:
-0 8px 25px rgba(0,0,0,0.7);
-
-backdrop-filter:blur(6px);
-
+box-shadow:0 8px 25px rgba(0,0,0,0.7);
 }
 
 /* GAME GRID */
 
 #games{
-
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-gap:22px;
-
+gap:20px;
 }
 
 /* GAME CARDS */
 
 .game{
-
 background:#121826;
 padding:18px;
 border-radius:10px;
@@ -51,51 +63,115 @@ border-radius:10px;
 border:1px solid rgba(0,255,200,0.12);
 
 box-shadow:
-0 0 8px rgba(0,255,200,0.12),
+0 0 8px rgba(0,255,200,0.15),
 0 5px 18px rgba(0,0,0,0.6);
 
 transition:0.25s;
-
 }
 
 .game:hover{
-
 transform:translateY(-4px);
 
 box-shadow:
 0 0 15px rgba(0,255,200,0.35),
 0 10px 30px rgba(0,0,0,0.8);
-
 }
 
 /* BUTTONS */
 
 button{
+padding:10px 16px;
 
-padding:9px 16px;
 background:linear-gradient(45deg,#00ffd0,#00bfa6);
+
 border:none;
 border-radius:6px;
+
 cursor:pointer;
 font-weight:bold;
 
 transition:0.2s;
-
 }
 
 button:hover{
-
 transform:scale(1.05);
+
 background:linear-gradient(45deg,#00ffd0,#00ffe0);
+}
+
+/* PLAYER AREA */
+
+#player{
+margin-top:20px;
+}
+
+/* FULLSCREEN GAME */
+
+#gameFullscreen{
+
+position:fixed;
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:black;
+
+z-index:9999;
+
+display:flex;
+flex-direction:column;
+}
+
+/* GAME IFRAME */
+
+.gameFrame{
+flex:1;
+width:100%;
+height:100%;
+border:none;
+}
+
+/* EXIT BUTTON */
+
+.exitBtn{
+
+position:absolute;
+
+top:15px;
+left:15px;
+
+z-index:10000;
+
+}
+
+/* INPUTS */
+
+input, textarea{
+
+padding:10px;
+border-radius:6px;
+border:none;
+
+margin-top:6px;
+
+background:#0f1422;
+color:white;
+
+outline:none;
+}
+
+input:focus, textarea:focus{
+
+box-shadow:0 0 8px rgba(0,255,200,0.5);
 
 }
 
 /* PAGE SYSTEM */
 
 .page{
-
 display:none;
-
 }
 
 /* LOGIN SCREEN */
@@ -105,6 +181,7 @@ display:none;
 position:fixed;
 top:0;
 left:0;
+
 width:100%;
 height:100%;
 
@@ -114,27 +191,15 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-
 }
 
-/* INPUT FIELDS */
+/* LISTS */
 
-input, textarea{
-
-padding:10px;
-border-radius:6px;
-border:none;
-margin-top:6px;
-
-background:#0f1422;
-color:white;
-
-outline:none;
-
+ul{
+list-style:none;
+padding:0;
 }
 
-input:focus, textarea:focus{
-
-box-shadow:0 0 8px rgba(0,255,200,0.5);
-
+li{
+margin:8px 0;
 }
