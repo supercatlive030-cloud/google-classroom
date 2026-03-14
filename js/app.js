@@ -327,4 +327,8 @@ border:none;
 
 newTab.document.close()
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b1a73ae2d726166cf824fe4f5123847b39b06e2a
