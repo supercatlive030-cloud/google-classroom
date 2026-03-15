@@ -15,30 +15,32 @@
 
 <body>
 
-<!-- FAKE CLASSROOM PAGE -->
+<!-- ========================= -->
+<!-- FAKE LEARNING PAGE -->
+<!-- ========================= -->
 
 <div id="learningPage">
 
 <header class="learnHeader">
 <h1>Student Learning Portal</h1>
-<p>Assignments and resources</p>
+<p>Assignments and educational resources</p>
 </header>
 
 <div class="learnContent">
 
 <div class="learnCard">
 <h2>Math Practice</h2>
-<p>Practice algebra and problem solving.</p>
+<p>Practice algebra, geometry, and problem solving.</p>
 </div>
 
 <div class="learnCard">
 <h2>Science Resources</h2>
-<p>Interactive learning materials.</p>
+<p>Interactive learning materials and exercises.</p>
 </div>
 
 <div class="learnCard">
 <h2>Assignments</h2>
-<p>Check homework and due dates.</p>
+<p>Review your class assignments and due dates.</p>
 </div>
 
 <p class="hint">Student learning portal active</p>
@@ -47,12 +49,13 @@
 
 </div>
 
-
+<!-- ========================= -->
 <!-- REAL SITE -->
+<!-- ========================= -->
 
 <div id="realSite" style="display:none">
 
-<!-- PARALLAX BACKGROUND -->
+<!-- PARALLAX -->
 
 <div id="parallax">
 <div class="layer layer1"></div>
@@ -86,9 +89,11 @@
 </header>
 
 <nav>
+
 <button onclick="showPage('gamesPage')">Home</button>
 <button onclick="showPage('settingsPage')">Settings</button>
 <button onclick="showPage('requestPage')">Requests</button>
+
 </nav>
 
 <main>
@@ -172,6 +177,10 @@
 </div>
 </div>
 
+<!-- ========================= -->
+<!-- SCRIPTS -->
+<!-- ========================= -->
+
 <script src="js/app.js"></script>
 
 <script>
@@ -181,6 +190,30 @@
 document.getElementById("loginForm").addEventListener("submit", function(e){
 e.preventDefault()
 checkSitePassword()
+})
+
+/* SECRET CODE SYSTEM */
+
+let secret = ""
+const code = "pie"
+
+document.addEventListener("keydown", function(e){
+
+secret += e.key.toLowerCase()
+
+if(secret.includes(code)){
+
+document.getElementById("learningPage").style.display = "none"
+document.getElementById("realSite").style.display = "block"
+
+secret = ""
+
+}
+
+if(secret.length > 20){
+secret = ""
+}
+
 })
 
 </script>
