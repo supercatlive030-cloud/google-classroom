@@ -1,172 +1,232 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
 
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Student Resources Portal</title>
+<title>The Cats Arcade</title>
 
-<link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png">
 <link rel="stylesheet" href="css/styles.css">
 
 </head>
 
 <body>
 
-<!-- ========================= -->
-<!-- FAKE LEARNING PAGE -->
-<!-- ========================= -->
-
-<div id="learningPage">
-
-<header class="learnHeader">
-<h1>Student Learning Portal</h1>
-<p>Assignments and educational resources</p>
-</header>
-
-<div class="learnContent">
-
-<div class="learnCard">
-<h2>Math Practice</h2>
-<p>Practice algebra, geometry, and problem solving.</p>
-</div>
-
-<div class="learnCard">
-<h2>Science Resources</h2>
-<p>Interactive learning materials and exercises.</p>
-</div>
-
-<div class="learnCard">
-<h2>Assignments</h2>
-<p>Review your class assignments and due dates.</p>
-</div>
-
-<p class="hint">Student learning portal active</p>
-
-</div>
-
-</div>
-
-<!-- ========================= -->
-<!-- REAL SITE -->
-<!-- ========================= -->
-
-<div id="realSite" style="display:none">
-
-<!-- PARALLAX -->
-
-<div id="parallax">
-<div class="layer layer1"></div>
-<div class="layer layer2"></div>
-<div class="layer layer3"></div>
-</div>
-
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 
 <div id="loginScreen">
 
 <h2>Enter Password</h2>
 
 <form id="loginForm">
-<input type="password" id="sitePassword" placeholder="Password" required>
+
+<input type="password" id="sitePassword" placeholder="Password">
+
 <br><br>
+
 <button type="submit">Enter</button>
+
 </form>
 
 <p id="loginError"></p>
 
 </div>
 
+
 <!-- MAIN SITE -->
 
 <div id="siteContent" style="display:none">
 
 <header>
+
 <h1>The Cats Arcade</h1>
-<p>Click play to start a game.</p>
+
+<p>Play unblocked games anytime.</p>
+
+<p id="playerCounter">Players Online: 0</p>
+
 </header>
+
+
+<!-- NAVIGATION -->
 
 <nav>
 
 <button onclick="showPage('gamesPage')">Home</button>
 <button onclick="showPage('settingsPage')">Settings</button>
 <button onclick="showPage('requestPage')">Requests</button>
+<button onclick="showPage('chatPage')">Chat</button>
+<button onclick="showPage('donatePage')">Donate</button>
 
 </nav>
 
+
 <main>
 
-<!-- GAMES PAGE -->
+<!-- GAMES -->
 
 <div id="gamesPage" class="page">
 
 <section class="card">
 
-<h2>Available Games</h2>
+<h2>Games</h2>
+
+<input id="gameSearch" placeholder="Search games..." oninput="searchGames()">
+
+<br><br>
+
+<button onclick="randomGame()">Random Game</button>
+
+<br><br>
+
 <div id="games"></div>
 
 </section>
+
 
 <section class="card">
 
 <h2>Play Area</h2>
 
 <div id="player">
+
 <p>No game loaded.</p>
+
 </div>
 
 </section>
 
 </div>
 
-<!-- SETTINGS PAGE -->
 
-<div id="settingsPage" class="page" style="display:none">
+<!-- SETTINGS -->
+
+<div id="settingsPage" class="page">
 
 <section class="card">
 
 <h2>Settings</h2>
 
-<label>Background Color</label>
-<br>
+<p>Background Color</p>
 
 <input type="color" id="bgColor">
 
 <br><br>
 
-<button onclick="saveSettings()">Save</button>
+<p>Panic Website</p>
+
+<input id="panicInput">
+
+<br><br>
+
+<button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+<br><br>
+
+<button onclick="saveSettings()">Save Settings</button>
+<button onclick="savePanic()">Save Panic Site</button>
 
 </section>
 
 </div>
 
-<!-- REQUEST PAGE -->
 
-<div id="requestPage" class="page" style="display:none">
+<!-- REQUESTS -->
+
+<div id="requestPage" class="page">
 
 <section class="card">
 
-<h2>Request / Feedback</h2>
+<h2>Game Requests</h2>
 
-<input id="reqName" placeholder="Name">
-
-<br><br>
-
-<textarea id="reqGames" placeholder="Games you want"></textarea>
+<input id="reqName" placeholder="Your name">
 
 <br><br>
 
-<textarea id="reqIdeas" placeholder="Website ideas"></textarea>
+<textarea id="reqGames"></textarea>
 
 <br><br>
 
-<textarea id="reqBug" placeholder="Bug report"></textarea>
+<button onclick="submitRequest()">Submit Request</button>
+
+</section>
+
+</div>
+
+
+<!-- CHAT -->
+
+<div id="chatPage" class="page">
+
+<section class="card">
+
+<h2>Chat</h2>
+
+<div id="chatBox"></div>
+
+<br>
+
+<input id="chatName" placeholder="Name">
 
 <br><br>
 
-<button onclick="submitRequest()">Submit</button>
+<input id="chatMessage" placeholder="Message">
+
+<br><br>
+
+<button onclick="sendChat()">Send</button>
+
+</section>
+
+</div>
+
+
+<!-- DONATE -->
+
+<div id="donatePage" class="page">
+
+<section class="card">
+
+<h2>Support Cats Arcade</h2>
+
+<button onclick="openDonate()">Donate</button>
+
+</section>
+
+</div>
+
+
+<!-- DEV PANEL -->
+
+<div id="devPage" class="page">
+
+<section class="card">
+
+<h2>Developer Panel</h2>
+
+<button onclick="showPage('gamesPage')">Return</button>
+
+<hr>
+
+<p>Games Loaded: <span id="devGameCount">0</span></p>
+<p>Chat Messages: <span id="devChatCount">0</span></p>
+<p>Requests: <span id="devRequestCount">0</span></p>
+
+<hr>
+
+<button onclick="reloadGames()">Reload Games</button>
+<button onclick="addGameDev()">Add Game</button>
+<button onclick="removeLastGame()">Remove Last Game</button>
+
+<hr>
+
+<button onclick="viewRequests()">View Requests</button>
+
+<hr>
+
+<button onclick="testGame()">Test Game URL</button>
 
 </section>
 
@@ -175,48 +235,10 @@
 </main>
 
 </div>
-</div>
 
-<!-- ========================= -->
-<!-- SCRIPTS -->
-<!-- ========================= -->
+<div id="notifContainer"></div>
 
 <script src="js/app.js"></script>
-
-<script>
-
-/* LOGIN FORM */
-
-document.getElementById("loginForm").addEventListener("submit", function(e){
-e.preventDefault()
-checkSitePassword()
-})
-
-/* SECRET CODE SYSTEM */
-
-let secret = ""
-const code = "pie"
-
-document.addEventListener("keydown", function(e){
-
-secret += e.key.toLowerCase()
-
-if(secret.includes(code)){
-
-document.getElementById("learningPage").style.display = "none"
-document.getElementById("realSite").style.display = "block"
-
-secret = ""
-
-}
-
-if(secret.length > 20){
-secret = ""
-}
-
-})
-
-</script>
 
 </body>
 </html>
