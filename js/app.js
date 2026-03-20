@@ -1,5 +1,5 @@
 /* ===============================
-   CATS ARCADE APP.JS v5
+   CATS ARCADE APP.JS v6
 ================================ */
 
 const SITE_PASSWORD = btoa("012312");
@@ -16,34 +16,21 @@ const siteContent = document.getElementById("siteContent");
 const loginError = document.getElementById("loginError");
 const player = document.getElementById("player");
 
-const chatName = document.getElementById("chatName");
-const chatMessage = document.getElementById("chatMessage");
-
-const bgColor = document.getElementById("bgColor");
-const panicInput = document.getElementById("panicInput");
-
-const reqName = document.getElementById("reqName");
-const reqGames = document.getElementById("reqGames");
-
 /* ===============================
 STARTUP
 ================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-document.getElementById("loginForm").addEventListener("submit", e=>{
-e.preventDefault();
-checkSitePassword();
-});
+    document.getElementById("loginForm").addEventListener("submit", e=>{
+        e.preventDefault();
+        checkSitePassword();
+    });
 
-chatMessage.addEventListener("keydown", e=>{
-if(e.key==="Enter") sendChat();
-});
-
-loadGames();
-loadSettings();
-loadChat();
-updatePlayerCounter();
+    loadGames();
+    loadSettings();
+    loadChat();
+    updatePlayerCounter();
 
 });
 
@@ -53,22 +40,20 @@ LOGIN
 
 function checkSitePassword(){
 
-const input=document.getElementById("sitePassword").value;
+    const input = document.getElementById("sitePassword").value;
 
-if(btoa(input)===SITE_PASSWORD){
+    if(btoa(input) === SITE_PASSWORD){
 
-loginScreen.style.display="none";
-siteContent.style.display="block";
+        loginScreen.style.display = "none";
+        siteContent.style.display = "block";
 
-showPage("gamesPage");
+        showPage("gamesPage");
 
-notify("Welcome to Cats Arcade");
+        notify("Welcome to Cats Arcade");
 
-}else{
-
-loginError.textContent="Wrong password";
-
-}
+    } else {
+        loginError.textContent = "Wrong password";
+    }
 
 }
 
@@ -78,15 +63,14 @@ PAGE SYSTEM
 
 function showPage(page){
 
-document.querySelectorAll(".page").forEach(p=>{
-p.style.display="none";
-});
+    document.querySelectorAll(".page").forEach(p=>{
+        p.style.display = "none";
+    });
 
-const target=document.getElementById(page);
+    const target = document.getElementById(page);
+    if(target) target.style.display = "block";
 
-if(target) target.style.display="block";
-
-if(page==="devPage") updateDevStats();
+    if(page === "devPage") updateDevStats();
 
 }
 
@@ -96,15 +80,14 @@ PLAYER COUNTER
 
 function updatePlayerCounter(){
 
-playersOnline=Math.floor(Math.random()*6)+1;
+    playersOnline = Math.floor(Math.random()*6)+1;
 
-let counter=document.getElementById("playerCounter");
+    const counter = document.getElementById("playerCounter");
+    if(counter){
+        counter.textContent = "Players Online: " + playersOnline;
+    }
 
-if(counter){
-counter.textContent="Players Online: "+playersOnline;
-}
-
-setTimeout(updatePlayerCounter,15000);
+    setTimeout(updatePlayerCounter,15000);
 
 }
 
@@ -114,23 +97,23 @@ LOAD GAMES
 
 async function loadGames(){
 
-try{
+    try{
 
-const res=await fetch("./games/games.json");
-const data=await res.json();
+        const res = await fetch("./games/games.json");
+        const data = await res.json();
 
-allGames=data;
+        allGames = data;
 
-displayGames(allGames);
+        displayGames(allGames);
 
-notify(allGames.length+" games loaded");
+        notify(allGames.length + " games loaded");
 
-}catch(err){
+    }catch(err){
 
-console.error(err);
-notify("Failed to load games");
+        console.error("GAME LOAD ERROR:", err);
+        notify("Failed to load games");
 
-}
+    }
 
 }
 
@@ -140,110 +123,84 @@ DISPLAY GAMES
 
 function displayGames(games){
 
-const container=document.getElementById("games");
+    const container = document.getElementById("games");
+    if(!container) return;
 
-container.innerHTML="";
+    container.innerHTML = "";
 
-games.forEach(game=>{
+    games.forEach(game=>{
 
-const card=document.createElement("div");
+        const card = document.createElement("div");
+        card.className = "game";
 
-card.className="game";
+        card.innerHTML = `
+        <h3>${game.title}</h3>
+        <button onclick="startGame('${game.path}')">Play</button>
+        `;
 
-card.innerHTML=`
-<h3>${game.title}</h3>
-<button onclick="startGame('${game.path}')">Play</button>
-`;
+        container.appendChild(card);
 
-container.appendChild(card);
-
-});
-
-}
-
-/* ===============================
-SEARCH
-================================ */
-
-function searchGames(){
-
-const input=document.getElementById("gameSearch").value.toLowerCase();
-
-const filtered=allGames.filter(g=>
-g.title.toLowerCase().includes(input)
-);
-
-displayGames(filtered);
+    });
 
 }
 
 /* ===============================
-GAME PLAYER
+GAME PLAYER (FIXED)
 ================================ */
 
 function startGame(path){
 
-const wantTimer=confirm("Start a game timer?");
+    clearInterval(gameTimer);
 
-player.innerHTML=`
-<div id="gameContainer">
+    const wantTimer = confirm("Start a game timer?");
 
-<div id="loadingScreen">
-<h2>Loading Game...</h2>
-</div>
+    player.innerHTML = `
+    <div id="gameContainer">
 
-<button class="backBtn" onclick="exitGame()">Exit</button>
+        <div id="loadingScreen">
+            <h2>Loading Game...</h2>
+        </div>
 
-<iframe id="gameFrame" src="${path}"></iframe>
+        <button class="backBtn" onclick="exitGame()">Exit</button>
 
-<div id="commentSection">
+        <iframe id="gameFrame" src="${path}"></iframe>
 
-<h3>Game Feedback</h3>
+        <p id="gameTimerDisplay"></p>
 
-<div id="gameComments"></div>
+    </div>
+    `;
 
-<input id="commentInput" placeholder="Leave feedback">
-<button onclick="postComment()">Post</button>
+    const frame = document.getElementById("gameFrame");
 
-</div>
+    /* 🔥 ERROR DETECTION */
+    frame.onload = () => {
+        document.getElementById("loadingScreen").style.display = "none";
+        notify("Game loaded");
+    };
 
-</div>
-`;
+    frame.onerror = () => {
+        notify("Game failed to load ❌");
+        console.error("Broken game path:", path);
+        exitGame();
+    };
 
-robotVoice();
+    /* TIMER */
 
-setTimeout(()=>{
-document.getElementById("loadingScreen").style.display="none";
-},1500);
+    if(wantTimer){
 
-if(wantTimer){
+        gameSeconds = 0;
 
-gameSeconds=0;
+        gameTimer = setInterval(()=>{
+            gameSeconds++;
 
-gameTimer=setInterval(()=>{
-gameSeconds++;
-},1000);
+            const display = document.getElementById("gameTimerDisplay");
+            if(display){
+                display.textContent = "Time: " + gameSeconds + "s";
+            }
 
-}
+        },1000);
 
-loadComments();
-
-notify("Game loading...");
-
-}
-
-/* ===============================
-ROBOT VOICE
-================================ */
-
-function robotVoice(){
-
-const msg=new SpeechSynthesisUtterance("The Cats Arcade");
-
-msg.pitch=0.5;
-msg.rate=0.8;
-
-speechSynthesis.speak(msg);
+    }
 
 }
 
@@ -253,9 +210,25 @@ EXIT GAME
 
 function exitGame(){
 
-clearInterval(gameTimer);
+    clearInterval(gameTimer);
 
-player.innerHTML="<p>No game loaded.</p>";
+    player.innerHTML = "<p>No game loaded.</p>";
+
+}
+
+/* ===============================
+SEARCH
+================================ */
+
+function searchGames(){
+
+    const input = document.getElementById("gameSearch").value.toLowerCase();
+
+    const filtered = allGames.filter(g =>
+        g.title.toLowerCase().includes(input)
+    );
+
+    displayGames(filtered);
 
 }
 
@@ -265,11 +238,11 @@ RANDOM GAME
 
 function randomGame(){
 
-if(allGames.length===0) return;
+    if(allGames.length === 0) return;
 
-const random=allGames[Math.floor(Math.random()*allGames.length)];
+    const random = allGames[Math.floor(Math.random()*allGames.length)];
 
-startGame(random.path);
+    startGame(random.path);
 
 }
 
@@ -277,113 +250,62 @@ startGame(random.path);
 SECRET DEV PANEL
 ================================ */
 
-let secretTyped="";
+let secretTyped = "";
 
-document.addEventListener("keydown",e=>{
+document.addEventListener("keydown", e=>{
 
-secretTyped=(secretTyped+e.key.toLowerCase()).slice(-10);
+    secretTyped = (secretTyped + e.key.toLowerCase()).slice(-15);
 
-if(secretTyped.endsWith("micah4567")){
+    if(secretTyped.endsWith("micah4567")){
 
-showPage("devPage");
+        showPage("devPage");
+        notify("Developer panel opened");
 
-notify("Developer panel opened");
+        secretTyped = "";
 
-secretTyped="";
-
-}
+    }
 
 });
 
 /* ===============================
-CHAT
+CHAT (SAFE)
 ================================ */
 
 function sendChat(){
 
-const name=chatName.value||"anon";
-const msg=chatMessage.value;
+    const name = document.getElementById("chatName").value || "anon";
+    const msg = document.getElementById("chatMessage").value;
 
-if(msg==="") return;
+    if(msg === "") return;
 
-addChat(name+": "+msg);
+    let chats = JSON.parse(localStorage.getItem("chatMessages")) || [];
 
-chatMessage.value="";
+    chats.push(name + ": " + msg);
 
-}
+    if(chats.length > 100) chats.shift();
 
-function addChat(text){
+    localStorage.setItem("chatMessages", JSON.stringify(chats));
 
-let chats=JSON.parse(localStorage.getItem("chatMessages"))||[];
+    document.getElementById("chatMessage").value = "";
 
-chats.push(text);
-
-if(chats.length>100) chats.shift();
-
-localStorage.setItem("chatMessages",JSON.stringify(chats));
-
-loadChat();
+    loadChat();
 
 }
 
 function loadChat(){
 
-const box=document.getElementById("chatBox");
+    const box = document.getElementById("chatBox");
+    if(!box) return;
 
-let chats=JSON.parse(localStorage.getItem("chatMessages"))||[];
+    let chats = JSON.parse(localStorage.getItem("chatMessages")) || [];
 
-box.innerHTML="";
+    box.innerHTML = "";
 
-chats.forEach(c=>{
-const line=document.createElement("p");
-line.textContent=c;
-box.appendChild(line);
-});
-
-box.scrollTop=box.scrollHeight;
-
-}
-
-setInterval(loadChat,2000);
-
-/* ===============================
-COMMENTS
-================================ */
-
-function postComment(){
-
-const input=document.getElementById("commentInput");
-const msg=input.value;
-
-if(msg==="") return;
-
-let comments=JSON.parse(localStorage.getItem("comments"))||[];
-
-comments.push(msg);
-
-localStorage.setItem("comments",JSON.stringify(comments));
-
-loadComments();
-
-input.value="";
-
-}
-
-function loadComments(){
-
-const box=document.getElementById("gameComments");
-
-if(!box) return;
-
-let comments=JSON.parse(localStorage.getItem("comments"))||[];
-
-box.innerHTML="";
-
-comments.forEach(c=>{
-const p=document.createElement("p");
-p.textContent=c;
-box.appendChild(p);
-});
+    chats.forEach(c=>{
+        const line = document.createElement("p");
+        line.textContent = c;
+        box.appendChild(line);
+    });
 
 }
 
@@ -393,85 +315,23 @@ SETTINGS
 
 function saveSettings(){
 
-const color=bgColor.value;
+    const color = document.getElementById("bgColor").value;
 
-localStorage.setItem("bgColor",color);
+    localStorage.setItem("bgColor", color);
+    document.body.style.background = color;
 
-document.body.style.background=color;
-
-notify("Settings saved");
+    notify("Settings saved");
 
 }
 
 function loadSettings(){
 
-const color=localStorage.getItem("bgColor");
+    const color = localStorage.getItem("bgColor");
 
-if(color){
-document.body.style.background=color;
-bgColor.value=color;
-}
-
-}
-
-/* ===============================
-DARK MODE
-================================ */
-
-function toggleDarkMode(){
-
-document.body.classList.toggle("dark");
-
-}
-
-/* ===============================
-PANIC KEY
-================================ */
-
-function savePanic(){
-
-localStorage.setItem("panicSite",panicInput.value);
-
-notify("Panic site saved");
-
-}
-
-document.addEventListener("keydown",e=>{
-
-if(e.key==="`"){
-
-const site=localStorage.getItem("panicSite")||"https://google.com";
-
-window.location.href=site;
-
-}
-
-});
-
-/* ===============================
-REQUESTS
-================================ */
-
-function submitRequest(){
-
-if(reqName.value===""||reqGames.value===""){
-
-notify("Fill all fields");
-
-return;
-
-}
-
-let reqs=JSON.parse(localStorage.getItem("requests"))||[];
-
-reqs.push(reqName.value+": "+reqGames.value);
-
-localStorage.setItem("requests",JSON.stringify(reqs));
-
-notify("Request sent!");
-
-reqName.value="";
-reqGames.value="";
+    if(color){
+        document.body.style.background = color;
+        document.getElementById("bgColor").value = color;
+    }
 
 }
 
@@ -481,75 +341,13 @@ DEV PANEL
 
 function updateDevStats(){
 
-const chats=JSON.parse(localStorage.getItem("chatMessages"))||[];
-const reqs=JSON.parse(localStorage.getItem("requests"))||[];
+    const chats = JSON.parse(localStorage.getItem("chatMessages")) || [];
+    const reqs = JSON.parse(localStorage.getItem("requests")) || [];
 
-document.getElementById("devGameCount").textContent=allGames.length;
-document.getElementById("devChatCount").textContent=chats.length;
-document.getElementById("devRequestCount").textContent=reqs.length;
+    document.getElementById("devGameCount").textContent = allGames.length;
+    document.getElementById("devChatCount").textContent = chats.length;
+    document.getElementById("devRequestCount").textContent = reqs.length;
 
-}
-
-function reloadGames(){
-loadGames();
-notify("Games reloaded");
-}
-
-function addGameDev(){
-
-const title=prompt("Game title?");
-const path=prompt("Game path?");
-
-if(!title||!path) return;
-
-allGames.push({title,path});
-
-displayGames(allGames);
-
-notify("Game added");
-
-}
-
-function removeLastGame(){
-
-if(allGames.length===0) return;
-
-const removed=allGames.pop();
-
-displayGames(allGames);
-
-notify("Removed "+removed.title);
-
-}
-
-function viewRequests(){
-
-const reqs=JSON.parse(localStorage.getItem("requests"))||[];
-
-console.log("Requests:",reqs);
-
-alert("Requests printed to console");
-
-}
-
-function testGame(){
-
-const url=prompt("Enter game URL");
-
-if(!url) return;
-
-player.innerHTML=`
-<iframe src="${url}" style="width:100%;height:600px;border:none"></iframe>
-`;
-
-}
-
-/* ===============================
-DONATE
-================================ */
-
-function openDonate(){
-window.open("https://ko-fi.com","_blank");
 }
 
 /* ===============================
@@ -558,17 +356,18 @@ NOTIFICATIONS
 
 function notify(message){
 
-const container=document.getElementById("notifContainer");
+    const container = document.getElementById("notifContainer");
+    if(!container) return;
 
-const notif=document.createElement("div");
+    const notif = document.createElement("div");
 
-notif.className="notif";
-notif.textContent=message;
+    notif.className = "notif";
+    notif.textContent = message;
 
-container.appendChild(notif);
+    container.appendChild(notif);
 
-setTimeout(()=>{
-notif.remove();
-},4000);
+    setTimeout(()=>{
+        notif.remove();
+    },4000);
 
 }

@@ -1,82 +1,62 @@
 [
 {
-"id": "retro-bowl",
 "title": "Retro Bowl",
 "path": "games/retro-bowl/index.html"
 },
 {
-"id": "retro-bowl2",
-"title": "Retro Bowl 2",
-"path": "games/retro-bowl2/index.html"
-},
-{
-"id": "example-ball",
 "title": "Example Ball",
 "path": "games/example-ball/index.html"
 },
 {
-"id": "chroma",
 "title": "Chroma",
 "path": "games/chroma/index.html"
 },
 {
-"id": "geometry-dash",
 "title": "Geometry Dash",
 "path": "games/geometry-dash/index.html"
 },
 {
-"id": "pacman",
 "title": "Pacman",
 "path": "games/pacman/index.html"
 },
 {
-"id": "2048",
 "title": "2048",
 "path": "games/2048/index.html"
 },
 {
-"id": "slope",
 "title": "Slope",
 "path": "games/slope/index.html"
 },
 {
-"id": "slope-2",
 "title": "Slope 2",
 "path": "games/slope-2/index.html"
 },
 {
-"id": "cookie",
 "title": "Cookie Game",
 "path": "games/cookie/index.html"
 },
 {
-"id": "moto-classic",
 "title": "Moto Classic",
 "path": "games/moto-classic/index.html"
 },
 {
-"id": "moto-winter",
 "title": "Moto Winter",
 "path": "games/moto-winter/index.html"
 },
 {
-"id": "doodle-jump",
 "title": "Doodle Jump",
 "path": "games/doodle-jump/index.html"
 },
 {
-"id": "zombs-royale",
 "title": "Zombs Royale",
 "path": "games/zombsroyale/index.html"
 },
 {
-"id": "fnf",
 "title": "Friday Night Funkin",
 "path": "games/friday-night-funkin/index.html"
 },
 {
-"id": "fnf-week6",
 "title": "Friday Night Funkin Week 6",
-"path": "games/friday-night-funkin-week6/index.html"
+"path": "games/fnf-week-6/index.html"
 }
 ]
