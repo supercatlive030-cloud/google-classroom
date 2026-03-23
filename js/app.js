@@ -1,373 +1,173 @@
-/* ===============================
-   CATS ARCADE APP.JS v6
-================================ */
+const SITE_PASSWORD = "012312";
+const CALC_CODE = "2312";
 
-const SITE_PASSWORD = btoa("012312");
-
+let calc = "0";
 let allGames = [];
-let playersOnline = 0;
-let gameTimer = null;
-let gameSeconds = 0;
-
-/* ELEMENTS */
-
-const loginScreen = document.getElementById("loginScreen");
-const siteContent = document.getElementById("siteContent");
-const loginError = document.getElementById("loginError");
-const player = document.getElementById("player");
-
-/* ===============================
-STARTUP
-================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
+  const calcDisplay = document.getElementById("calcDisplay");
+  const calcLock = document.getElementById("calcLock");
 
-    document.getElementById("loginForm").addEventListener("submit", e=>{
-        e.preventDefault();
-        checkSitePassword();
-    });
+  const loginScreen = document.getElementById("loginScreen");
+  const loginForm = document.getElementById("loginForm");
+  const sitePassword = document.getElementById("sitePassword");
+  const loginError = document.getElementById("loginError");
 
-    loadGames();
-    loadSettings();
-    loadChat();
-    updatePlayerCounter();
+  const siteContent = document.getElementById("siteContent");
 
-});
+  const gamesDiv = document.getElementById("games");
+  const player = document.getElementById("player");
+  const gameSearch = document.getElementById("gameSearch");
 
-/* ===============================
-LOGIN
-================================ */
+  const chatBox = document.getElementById("chatBox");
+  const chatName = document.getElementById("chatName");
+  const chatMessage = document.getElementById("chatMessage");
 
-function checkSitePassword(){
+  const giftList = document.getElementById("giftList");
+  const giftName = document.getElementById("giftName");
+  const giftCode = document.getElementById("giftCode");
 
-    const input = document.getElementById("sitePassword").value;
+  /* CALCULATOR */
+  window.calcInput = (v) => {
+    calc = calc==="0"?v:calc+v;
+    calcDisplay.value = calc;
+  };
 
-    if(btoa(input) === SITE_PASSWORD){
+  window.calcClear = () => {
+    calc = "0";
+    calcDisplay.value = calc;
+  };
 
-        loginScreen.style.display = "none";
-        siteContent.style.display = "block";
-
-        showPage("gamesPage");
-
-        notify("Welcome to Cats Arcade");
-
-    } else {
-        loginError.textContent = "Wrong password";
+  window.calcEnter = () => {
+    if(calc === CALC_CODE){
+      calcLock.style.display="none";
+      loginScreen.style.display="flex";
+      calc="0";
+      calcDisplay.value = calc;
+      return;
     }
-
-}
-
-/* ===============================
-PAGE SYSTEM
-================================ */
-
-function showPage(page){
-
-    document.querySelectorAll(".page").forEach(p=>{
-        p.style.display = "none";
-    });
-
-    const target = document.getElementById(page);
-    if(target) target.style.display = "block";
-
-    if(page === "devPage") updateDevStats();
-
-}
-
-/* ===============================
-PLAYER COUNTER
-================================ */
-
-function updatePlayerCounter(){
-
-    playersOnline = Math.floor(Math.random()*6)+1;
-
-    const counter = document.getElementById("playerCounter");
-    if(counter){
-        counter.textContent = "Players Online: " + playersOnline;
-    }
-
-    setTimeout(updatePlayerCounter,15000);
-
-}
-
-/* ===============================
-LOAD GAMES
-================================ */
-
-async function loadGames(){
 
     try{
-
-        const res = await fetch("./games/games.json");
-        const data = await res.json();
-
-        allGames = data;
-
-        displayGames(allGames);
-
-        notify(allGames.length + " games loaded");
-
-    }catch(err){
-
-        console.error("GAME LOAD ERROR:", err);
-        notify("Failed to load games");
-
+      calc = Function("return ("+calc+")")().toString();
+    }catch{
+      calc = "0";
     }
+    calcDisplay.value = calc;
+  };
 
-}
+  /* LOGIN */
+  loginForm.addEventListener("submit", e => {
+    e.preventDefault();
+    if(sitePassword.value === SITE_PASSWORD){
+      loginScreen.style.display="none";
+      siteContent.style.display="block";
+      showPage("gamesPage");
+      loadGames();
+      loadChat();
+      loadGifts();
+    } else {
+      loginError.textContent = "Wrong password";
+      sitePassword.value = "";
+    }
+  });
 
-/* ===============================
-DISPLAY GAMES
-================================ */
+  /* GAMES */
+  async function loadGames(){
+    try{
+      let res = await fetch("./games/games.json");
+      allGames = await res.json();
+      displayGames(allGames);
+    }catch{
+      gamesDiv.innerHTML="No games found";
+    }
+  }
 
-function displayGames(games){
+  function displayGames(g){
+    gamesDiv.innerHTML="";
+    g.forEach(game=>{
+      let d=document.createElement("div");
+      d.className="game";
 
-    const container = document.getElementById("games");
-    if(!container) return;
+      let title = document.createElement("h3");
+      title.textContent = game.title;
 
-    container.innerHTML = "";
+      let btn = document.createElement("button");
+      btn.textContent = "Play";
+      btn.addEventListener("click", ()=>startGame(game.path));
 
-    games.forEach(game=>{
-
-        const card = document.createElement("div");
-        card.className = "game";
-
-        card.innerHTML = `
-        <h3>${game.title}</h3>
-        <button onclick="startGame('${game.path}')">Play</button>
-        `;
-
-        container.appendChild(card);
-
+      d.appendChild(title);
+      d.appendChild(btn);
+      gamesDiv.appendChild(d);
     });
+  }
 
-}
-
-/* ===============================
-GAME PLAYER (FIXED)
-================================ */
-
-function startGame(path){
-
-    clearInterval(gameTimer);
-
-    const wantTimer = confirm("Start a game timer?");
-
-    player.innerHTML = `
+  window.startGame = (path)=>{
+    player.innerHTML=`
     <div id="gameContainer">
+      <button class="exitBtn" onclick="exitGame()">✖</button>
+      <iframe src="${path}"></iframe>
+    </div>`;
+  };
 
-        <div id="loadingScreen">
-            <h2>Loading Game...</h2>
-        </div>
+  window.exitGame = ()=>{ player.innerHTML="<p>No game loaded.</p>"; };
+  window.searchGames = ()=>{ displayGames(allGames.filter(g=>g.title.toLowerCase().includes(gameSearch.value.toLowerCase()))); };
+  window.randomGame = ()=>{ if(!allGames.length) return; startGame(allGames[Math.floor(Math.random()*allGames.length)].path); };
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape") exitGame(); });
 
-        <button class="backBtn" onclick="exitGame()">Exit</button>
-
-        <iframe id="gameFrame" src="${path}"></iframe>
-
-        <p id="gameTimerDisplay"></p>
-
-    </div>
-    `;
-
-    const frame = document.getElementById("gameFrame");
-
-    /* 🔥 ERROR DETECTION */
-    frame.onload = () => {
-        document.getElementById("loadingScreen").style.display = "none";
-        notify("Game loaded");
-    };
-
-    frame.onerror = () => {
-        notify("Game failed to load ❌");
-        console.error("Broken game path:", path);
-        exitGame();
-    };
-
-    /* TIMER */
-
-    if(wantTimer){
-
-        gameSeconds = 0;
-
-        gameTimer = setInterval(()=>{
-            gameSeconds++;
-
-            const display = document.getElementById("gameTimerDisplay");
-            if(display){
-                display.textContent = "Time: " + gameSeconds + "s";
-            }
-
-        },1000);
-
-    }
-
-}
-
-/* ===============================
-EXIT GAME
-================================ */
-
-function exitGame(){
-
-    clearInterval(gameTimer);
-
-    player.innerHTML = "<p>No game loaded.</p>";
-
-}
-
-/* ===============================
-SEARCH
-================================ */
-
-function searchGames(){
-
-    const input = document.getElementById("gameSearch").value.toLowerCase();
-
-    const filtered = allGames.filter(g =>
-        g.title.toLowerCase().includes(input)
-    );
-
-    displayGames(filtered);
-
-}
-
-/* ===============================
-RANDOM GAME
-================================ */
-
-function randomGame(){
-
-    if(allGames.length === 0) return;
-
-    const random = allGames[Math.floor(Math.random()*allGames.length)];
-
-    startGame(random.path);
-
-}
-
-/* ===============================
-SECRET DEV PANEL
-================================ */
-
-let secretTyped = "";
-
-document.addEventListener("keydown", e=>{
-
-    secretTyped = (secretTyped + e.key.toLowerCase()).slice(-15);
-
-    if(secretTyped.endsWith("micah4567")){
-
-        showPage("devPage");
-        notify("Developer panel opened");
-
-        secretTyped = "";
-
-    }
-
-});
-
-/* ===============================
-CHAT (SAFE)
-================================ */
-
-function sendChat(){
-
-    const name = document.getElementById("chatName").value || "anon";
-    const msg = document.getElementById("chatMessage").value;
-
-    if(msg === "") return;
-
-    let chats = JSON.parse(localStorage.getItem("chatMessages")) || [];
-
-    chats.push(name + ": " + msg);
-
-    if(chats.length > 100) chats.shift();
-
-    localStorage.setItem("chatMessages", JSON.stringify(chats));
-
-    document.getElementById("chatMessage").value = "";
-
+  /* CHAT */
+  window.sendChat = ()=>{
+    if(!chatMessage.value.trim()) return;
+    let chats = JSON.parse(localStorage.getItem("chat")) || [];
+    chats.push((chatName.value||"Anon")+": "+chatMessage.value);
+    localStorage.setItem("chat", JSON.stringify(chats));
+    chatMessage.value="";
     loadChat();
+  };
 
-}
-
-function loadChat(){
-
-    const box = document.getElementById("chatBox");
-    if(!box) return;
-
-    let chats = JSON.parse(localStorage.getItem("chatMessages")) || [];
-
-    box.innerHTML = "";
-
+  function loadChat(){
+    let chats = JSON.parse(localStorage.getItem("chat")) || [];
+    chatBox.innerHTML="";
     chats.forEach(c=>{
-        const line = document.createElement("p");
-        line.textContent = c;
-        box.appendChild(line);
+      let p=document.createElement("p");
+      p.textContent=c;
+      chatBox.appendChild(p);
     });
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
 
-}
+  /* GIFTS */
+  window.submitGift = ()=>{
+    if(!giftCode.value.trim()) return;
+    let gifts = JSON.parse(localStorage.getItem("gifts")) || [];
+    gifts.push({ name: giftName.value||"Anon", code: giftCode.value });
+    localStorage.setItem("gifts", JSON.stringify(gifts));
+    giftName.value=""; giftCode.value="";
+    loadGifts();
+  };
 
-/* ===============================
-SETTINGS
-================================ */
+  function loadGifts(){
+    let gifts = JSON.parse(localStorage.getItem("gifts")) || [];
+    giftList.innerHTML="";
+    gifts.forEach(g=>{
+      let div=document.createElement("div");
+      div.className="giftItem";
+      let span=document.createElement("span");
+      span.textContent=`${g.name}: ${g.code}`;
+      let btn=document.createElement("button");
+      btn.textContent="📋";
+      btn.onclick=()=>{
+        navigator.clipboard.writeText(g.code);
+        btn.textContent="✔";
+        setTimeout(()=>btn.textContent="📋",1000);
+      };
+      div.appendChild(span); div.appendChild(btn);
+      giftList.appendChild(div);
+    });
+  }
 
-function saveSettings(){
-
-    const color = document.getElementById("bgColor").value;
-
-    localStorage.setItem("bgColor", color);
-    document.body.style.background = color;
-
-    notify("Settings saved");
-
-}
-
-function loadSettings(){
-
-    const color = localStorage.getItem("bgColor");
-
-    if(color){
-        document.body.style.background = color;
-        document.getElementById("bgColor").value = color;
-    }
-
-}
-
-/* ===============================
-DEV PANEL
-================================ */
-
-function updateDevStats(){
-
-    const chats = JSON.parse(localStorage.getItem("chatMessages")) || [];
-    const reqs = JSON.parse(localStorage.getItem("requests")) || [];
-
-    document.getElementById("devGameCount").textContent = allGames.length;
-    document.getElementById("devChatCount").textContent = chats.length;
-    document.getElementById("devRequestCount").textContent = reqs.length;
-
-}
-
-/* ===============================
-NOTIFICATIONS
-================================ */
-
-function notify(message){
-
-    const container = document.getElementById("notifContainer");
-    if(!container) return;
-
-    const notif = document.createElement("div");
-
-    notif.className = "notif";
-    notif.textContent = message;
-
-    container.appendChild(notif);
-
-    setTimeout(()=>{
-        notif.remove();
-    },4000);
-
-}
+  /* UI */
+  window.showPage = (p)=>{
+    document.querySelectorAll(".page").forEach(x=>x.style.display="none");
+    document.getElementById(p).style.display="block";
+  };
+});
