@@ -6,63 +6,26 @@ body {
   background:black;
 }
 
-/* BACKGROUND */
-#arcadeBg {
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:black;
-  overflow:hidden;
-  z-index:-2;
+header {
+  padding:20px;
+  background:#111;
 }
 
-#arcadeOverlay {
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.4);
-  z-index:-1;
+nav button {
+  margin:5px;
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#222;
+  color:white;
+  cursor:pointer;
 }
+nav button:hover { background:#444; }
 
-/* PARTICLES */
-.particle {
-  position:absolute;
-  width:4px;
-  height:4px;
-  background:cyan;
-  box-shadow:0 0 10px cyan;
-  animation:floatUp linear infinite;
-}
-.particle.p1{left:10%; animation:floatUp 12s infinite;}
-.particle.p2{left:50%; animation:floatUp 18s infinite;}
-.particle.p3{left:80%; animation:floatUp 15s infinite;}
+.page { display:none; }
 
-@keyframes floatUp { from {transform:translateY(100vh);} to {transform:translateY(-100vh);} }
-
-/* TRIANGLES */
-.triangle {
-  position:absolute;
-  border-left:10px solid transparent;
-  border-right:10px solid transparent;
-  border-bottom:20px solid cyan;
-  animation:move 20s linear infinite;
-}
-.triangle.t1{left:20%;}
-.triangle.t2{left:70%;}
-
-/* CIRCLES */
-.circle {
-  position:absolute;
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:magenta;
-  animation:move 25s linear infinite;
-}
-.circle.c1{left:30%;}
-.circle.c2{left:60%;}
-
-@keyframes move { from {transform:translateY(100vh);} to {transform:translateY(-100vh);} }
+/* HIDE CONTENT INITIALLY */
+#siteContent { display:none; }
 
 /* CALCULATOR */
 #calcLock {
@@ -73,6 +36,7 @@ body {
   justify-content:center;
   align-items:center;
   flex-direction:column;
+  background:black;
   z-index:10;
 }
 
@@ -103,39 +67,19 @@ body {
   cursor:pointer;
 }
 
-.calcGrid button:hover { background:#333; }
-.calcGrid button:nth-child(4n) { background:#ff9f0a; color:white; }
-.zero { grid-column:span 2; border-radius:40px; }
+.zero {
+  grid-column:span 2;
+  border-radius:40px;
+}
 
 /* LOGIN */
 #loginScreen {
   display:none;
+  height:100vh;
   justify-content:center;
   align-items:center;
   flex-direction:column;
-  height:100vh;
-  z-index:20;
 }
-
-#loginScreen input { padding:10px; border:none; border-radius:5px; }
-#loginScreen button { padding:10px 15px; border:none; border-radius:5px; background:#ff9f0a; color:white; cursor:pointer; }
-
-/* SITE */
-#siteContent { display:none; z-index:5; }
-.page { display:none; }
-
-/* NAV */
-nav { margin:10px; }
-nav button {
-  margin:5px;
-  padding:10px 15px;
-  border:none;
-  border-radius:8px;
-  background:#111;
-  color:white;
-  cursor:pointer;
-}
-nav button:hover { background:#222; }
 
 /* GAMES */
 #games {
@@ -151,16 +95,6 @@ nav button:hover { background:#222; }
   border-radius:10px;
 }
 
-.game button {
-  margin-top:5px;
-  padding:5px 10px;
-  border:none;
-  border-radius:5px;
-  background:#ff9f0a;
-  color:white;
-  cursor:pointer;
-}
-
 /* PLAYER */
 #gameContainer {
   position:fixed;
@@ -171,30 +105,48 @@ nav button:hover { background:#222; }
   background:black;
 }
 
-iframe { width:100%; height:100%; border:none; }
-.exitBtn { position:absolute; top:10px; right:10px; background:red; color:white; border:none; padding:10px; cursor:pointer; }
+iframe {
+  width:100%;
+  height:100%;
+  border:none;
+}
+
+.exitBtn {
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:red;
+  color:white;
+  border:none;
+  padding:10px;
+  cursor:pointer;
+}
 
 /* CHAT */
-#chatBox { max-height:200px; overflow-y:auto; margin:10px; }
-#chatBox p { background:#111; padding:5px; border-radius:5px; margin:5px; }
+#chatBox {
+  max-height:200px;
+  overflow-y:auto;
+}
 
 /* GIFTS */
 .giftItem {
   display:flex;
   justify-content:space-between;
-  align-items:center;
   background:#111;
   padding:8px;
   margin:5px auto;
   border-radius:8px;
   width:250px;
 }
-.giftItem button {
-  background:#222;
-  color:white;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
-  padding:5px 8px;
+
+/* DEV TOOLS MODAL */
+#byodLogin, #byodPanel {
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  background:#111;
+  padding:20px;
+  border-radius:10px;
 }
-.giftItem button:hover { background:#333; }

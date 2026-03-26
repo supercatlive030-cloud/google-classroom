@@ -1,173 +1,250 @@
-const SITE_PASSWORD = "012312";
-const CALC_CODE = "2312";
-
-let calc = "0";
-let allGames = [];
-
 document.addEventListener("DOMContentLoaded", () => {
-  const calcDisplay = document.getElementById("calcDisplay");
-  const calcLock = document.getElementById("calcLock");
 
-  const loginScreen = document.getElementById("loginScreen");
-  const loginForm = document.getElementById("loginForm");
-  const sitePassword = document.getElementById("sitePassword");
-  const loginError = document.getElementById("loginError");
-
-  const siteContent = document.getElementById("siteContent");
-
-  const gamesDiv = document.getElementById("games");
-  const player = document.getElementById("player");
-  const gameSearch = document.getElementById("gameSearch");
-
-  const chatBox = document.getElementById("chatBox");
-  const chatName = document.getElementById("chatName");
-  const chatMessage = document.getElementById("chatMessage");
-
-  const giftList = document.getElementById("giftList");
-  const giftName = document.getElementById("giftName");
-  const giftCode = document.getElementById("giftCode");
-
-  /* CALCULATOR */
-  window.calcInput = (v) => {
-    calc = calc==="0"?v:calc+v;
-    calcDisplay.value = calc;
+  // PAGE SWITCH
+  window.showPage = function(p){
+    document.querySelectorAll(".page").forEach(x => x.style.display="none");
+    document.getElementById(p).style.display="block";
   };
 
-  window.calcClear = () => {
-    calc = "0";
-    calcDisplay.value = calc;
+  // CALCULATOR
+  let calc="0";
+
+  window.calcInput = function(v){
+    if(calc.length > 20) return;
+    calc = calc==="0" ? v : calc + v;
+    document.getElementById("calcDisplay").value = calc;
   };
 
-  window.calcEnter = () => {
-    if(calc === CALC_CODE){
-      calcLock.style.display="none";
-      loginScreen.style.display="flex";
-      calc="0";
-      calcDisplay.value = calc;
+  window.calcClear = function(){
+    calc="0";
+    document.getElementById("calcDisplay").value = calc;
+  };
+
+  window.calcEnter = function(){
+    const CODE="2312";
+
+    if(calc===CODE){
+      document.getElementById("calcLock").style.display="none";
+      document.getElementById("loginScreen").style.display="flex";
+      calcClear();
       return;
     }
 
     try{
-      calc = Function("return ("+calc+")")().toString();
+      calc = eval(calc).toString();
     }catch{
-      calc = "0";
+      calc="Error";
     }
-    calcDisplay.value = calc;
+
+    document.getElementById("calcDisplay").value = calc;
   };
 
-  /* LOGIN */
-  loginForm.addEventListener("submit", e => {
+  // LOGIN
+  document.getElementById("loginForm").addEventListener("submit", e=>{
     e.preventDefault();
-    if(sitePassword.value === SITE_PASSWORD){
-      loginScreen.style.display="none";
-      siteContent.style.display="block";
+
+    const pass=document.getElementById("sitePassword").value;
+
+    if(pass==="012312"){
+      document.getElementById("loginScreen").style.display="none";
+      document.getElementById("siteContent").style.display="block";
       showPage("gamesPage");
       loadGames();
       loadChat();
       loadGifts();
     } else {
-      loginError.textContent = "Wrong password";
-      sitePassword.value = "";
+      document.getElementById("loginError").textContent="Wrong password";
     }
   });
 
-  /* GAMES */
-  async function loadGames(){
-    try{
-      let res = await fetch("./games/games.json");
-      allGames = await res.json();
-      displayGames(allGames);
-    }catch{
-      gamesDiv.innerHTML="No games found";
-    }
-  }
+  // CHAT
+  window.sendChat = function(){
+    const name=document.getElementById("chatName").value || "Anon";
+    const msg=document.getElementById("chatMessage").value;
+    if(!msg.trim()) return;
 
-  function displayGames(g){
-    gamesDiv.innerHTML="";
-    g.forEach(game=>{
-      let d=document.createElement("div");
-      d.className="game";
-
-      let title = document.createElement("h3");
-      title.textContent = game.title;
-
-      let btn = document.createElement("button");
-      btn.textContent = "Play";
-      btn.addEventListener("click", ()=>startGame(game.path));
-
-      d.appendChild(title);
-      d.appendChild(btn);
-      gamesDiv.appendChild(d);
-    });
-  }
-
-  window.startGame = (path)=>{
-    player.innerHTML=`
-    <div id="gameContainer">
-      <button class="exitBtn" onclick="exitGame()">✖</button>
-      <iframe src="${path}"></iframe>
-    </div>`;
-  };
-
-  window.exitGame = ()=>{ player.innerHTML="<p>No game loaded.</p>"; };
-  window.searchGames = ()=>{ displayGames(allGames.filter(g=>g.title.toLowerCase().includes(gameSearch.value.toLowerCase()))); };
-  window.randomGame = ()=>{ if(!allGames.length) return; startGame(allGames[Math.floor(Math.random()*allGames.length)].path); };
-  document.addEventListener("keydown", e=>{ if(e.key==="Escape") exitGame(); });
-
-  /* CHAT */
-  window.sendChat = ()=>{
-    if(!chatMessage.value.trim()) return;
-    let chats = JSON.parse(localStorage.getItem("chat")) || [];
-    chats.push((chatName.value||"Anon")+": "+chatMessage.value);
+    let chats = JSON.parse(localStorage.getItem("chat") || "[]");
+    chats.push(`${name}: ${msg}`);
     localStorage.setItem("chat", JSON.stringify(chats));
-    chatMessage.value="";
+
+    document.getElementById("chatMessage").value="";
     loadChat();
   };
 
-  function loadChat(){
-    let chats = JSON.parse(localStorage.getItem("chat")) || [];
-    chatBox.innerHTML="";
-    chats.forEach(c=>{
-      let p=document.createElement("p");
-      p.textContent=c;
-      chatBox.appendChild(p);
-    });
-    chatBox.scrollTop = chatBox.scrollHeight;
-  }
+  window.loadChat = function(){
+    const box=document.getElementById("chatBox");
+    box.innerHTML="";
+    let chats = JSON.parse(localStorage.getItem("chat") || "[]");
 
-  /* GIFTS */
-  window.submitGift = ()=>{
-    if(!giftCode.value.trim()) return;
-    let gifts = JSON.parse(localStorage.getItem("gifts")) || [];
-    gifts.push({ name: giftName.value||"Anon", code: giftCode.value });
+    chats.forEach(c=>{
+      const p=document.createElement("p");
+      p.textContent=c;
+      box.appendChild(p);
+    });
+  };
+
+  // GIFTS
+  window.submitGift = function(){
+    const name=document.getElementById("giftName").value || "Anon";
+    const code=document.getElementById("giftCode").value;
+    if(!code.trim()) return;
+
+    let gifts = JSON.parse(localStorage.getItem("gifts") || "[]");
+    gifts.push({name, code});
     localStorage.setItem("gifts", JSON.stringify(gifts));
-    giftName.value=""; giftCode.value="";
+
+    document.getElementById("giftName").value="";
+    document.getElementById("giftCode").value="";
     loadGifts();
   };
 
-  function loadGifts(){
-    let gifts = JSON.parse(localStorage.getItem("gifts")) || [];
-    giftList.innerHTML="";
+  window.loadGifts = function(){
+    const list=document.getElementById("giftList");
+    list.innerHTML="";
+    let gifts = JSON.parse(localStorage.getItem("gifts") || "[]");
+
     gifts.forEach(g=>{
-      let div=document.createElement("div");
+      const div=document.createElement("div");
       div.className="giftItem";
-      let span=document.createElement("span");
+
+      const span=document.createElement("span");
       span.textContent=`${g.name}: ${g.code}`;
-      let btn=document.createElement("button");
+
+      const btn=document.createElement("button");
       btn.textContent="📋";
       btn.onclick=()=>{
-        navigator.clipboard.writeText(g.code);
-        btn.textContent="✔";
-        setTimeout(()=>btn.textContent="📋",1000);
+        navigator.clipboard.writeText(g.code)
+          .catch(()=>alert("Copy failed"));
       };
-      div.appendChild(span); div.appendChild(btn);
-      giftList.appendChild(div);
+
+      div.appendChild(span);
+      div.appendChild(btn);
+      list.appendChild(div);
+    });
+  };
+
+  // GAMES
+  let allGames=[];
+
+  async function loadGames(){
+    try{
+      const res = await fetch("./games/games.json");
+      allGames = await res.json();
+      displayGames(allGames);
+    }catch{
+      document.getElementById("games").innerHTML="No games found.";
+    }
+  }
+
+  function displayGames(games){
+    const div=document.getElementById("games");
+    div.innerHTML="";
+
+    games.forEach(g=>{
+      const d=document.createElement("div");
+      d.className="game";
+      d.innerHTML = `
+        <h3>${g.title}</h3>
+        <button onclick="startGame('${g.path}')">Play</button>
+      `;
+      div.appendChild(d);
     });
   }
 
-  /* UI */
-  window.showPage = (p)=>{
-    document.querySelectorAll(".page").forEach(x=>x.style.display="none");
-    document.getElementById(p).style.display="block";
+  window.startGame = function(path){
+    document.getElementById("player").innerHTML = `
+      <div id="gameContainer">
+        <button class="exitBtn" onclick="exitGame()">✖</button>
+        <iframe src="${path}"></iframe>
+      </div>
+    `;
   };
+
+  window.exitGame = function(){
+    document.getElementById("player").innerHTML="<p>No game loaded.</p>";
+  };
+
+  window.searchGames = function(){
+    const val=document.getElementById("gameSearch").value.toLowerCase();
+    displayGames(allGames.filter(g=>g.title.toLowerCase().includes(val)));
+  };
+
+  window.randomGame = function(){
+    if(!allGames.length) return;
+    const g = allGames[Math.floor(Math.random()*allGames.length)];
+    startGame(g.path);
+  };
+
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape") exitGame();
+
+    // PANIC KEY
+    if(e.key==="\\"){
+      window.location.href="https://www.google.com";
+    }
+  });
+
+  // ABOUT:BLANK OPENER
+  window.openSite = function(url){
+    const win = window.open('about:blank', '_blank');
+
+    if(!win){
+      alert("Pop-up blocked! Allow pop-ups.");
+      return;
+    }
+
+    win.document.write(`
+      <html>
+        <head>
+          <title>Google Docs</title>
+          <link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png">
+          <style>
+            body { margin:0; }
+            iframe {
+              width:100vw;
+              height:100vh;
+              border:none;
+            }
+          </style>
+        </head>
+        <body>
+          <iframe src="${url}" allowfullscreen></iframe>
+        </body>
+      </html>
+    `);
+
+    win.document.close();
+
+    // SMART FALLBACK
+    setTimeout(()=>{
+      try{
+        if(!win.document.body || win.document.body.innerHTML.length < 50){
+          win.location.href = url;
+        }
+      }catch{
+        win.location.href = url;
+      }
+    },1500);
+  };
+
+  // DEV TOOLS
+  window.openByodLogin = function(){
+    const el=document.getElementById("byodLogin");
+    el.style.display="block";
+    document.getElementById("byodPass").focus();
+  };
+
+  window.checkByodPass = function(){
+    if(document.getElementById("byodPass").value==="6741"){
+      document.getElementById("byodLogin").style.display="none";
+      document.getElementById("byodPanel").style.display="block";
+    } else {
+      document.getElementById("byodError").textContent="Wrong password";
+    }
+  };
+
+  window.launchByod = function(){
+    window.open("https://your-username.github.io/learning-hub/", "_blank");
+  };
+
 });

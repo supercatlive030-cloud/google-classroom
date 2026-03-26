@@ -1,27 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Cats Arcade</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cats Arcade</title>
 
-<!-- ✅ Correct CSS path -->
-<link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-
 <body>
 
-<!-- BACKGROUND -->
-<div id="arcadeBg">
-  <div class="particle p1"></div>
-  <div class="particle p2"></div>
-  <div class="particle p3"></div>
-  <div class="triangle t1"></div>
-  <div class="triangle t2"></div>
-  <div class="circle c1"></div>
-  <div class="circle c2"></div>
-</div>
-<div id="arcadeOverlay"></div>
+<header>
+  <h1>The Cats Arcade</h1>
+</header>
 
 <!-- CALCULATOR LOCK -->
 <div id="calcLock">
@@ -56,7 +46,7 @@
 <div id="loginScreen">
   <h2>Enter Password</h2>
   <form id="loginForm">
-    <input type="password" id="sitePassword" placeholder="Password">
+    <input type="password" id="sitePassword">
     <br><br>
     <button type="submit">Enter</button>
   </form>
@@ -64,56 +54,84 @@
 </div>
 
 <!-- MAIN SITE -->
-<div id="siteContent">
+<div id="siteContent" style="display:none;">
 
-<header>
-  <h1>The Cats Arcade</h1>
-</header>
+  <!-- NAV -->
+  <nav>
+    <button onclick="showPage('gamesPage')">Home</button>
+    <button onclick="showPage('moviesPage')">Movies</button> <!-- ✅ NEW -->
+    <button onclick="showPage('chatPage')">Chat</button>
+    <button onclick="showPage('donatePage')">Gifts</button>
+    <button onclick="showPage('discordPage')">Discord</button>
+    <button onclick="openByodLogin()">Dev Tools</button>
+  </nav>
 
-<nav>
-  <button onclick="showPage('gamesPage')">Home</button>
-  <button onclick="showPage('chatPage')">Chat</button>
-  <button onclick="showPage('donatePage')">Gifts</button>
-  <button onclick="showPage('discordPage')">Discord</button>
-</nav>
+  <!-- HOME / GAMES -->
+  <div id="gamesPage" class="page" style="display:none;">
+    <input id="gameSearch" placeholder="Search..." oninput="searchGames()">
+    <button onclick="randomGame()">Random</button>
+    <div id="games"></div>
+    <div id="player"><p>No game loaded.</p></div>
+  </div>
 
-<main>
+  <!-- 🎬 MOVIES PAGE (NEW) -->
+  <div id="moviesPage" class="page" style="display:none;">
+    <h2>🎬 Movies and More!</h2>
 
-<!-- GAMES -->
-<div id="gamesPage" class="page">
-  <input id="gameSearch" placeholder="Search games..." oninput="searchGames()">
-  <button onclick="randomGame()">🎲 Random</button>
-  <div id="games"></div>
-  <div id="player"><p>No game loaded.</p></div>
+    <p>Watch movies or listen to music:</p>
+
+    <div style="margin-top:20px;">
+      <button onclick="openSite('https://www.cineby.sc/')">
+        🎥 Watch Movies
+      </button>
+    </div>
+
+    <div style="margin-top:10px;">
+      <button onclick="openSite('https://playlistsound.com/')">
+        🎵 Listen to Music
+      </button>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chatPage" class="page" style="display:none;">
+    <div id="chatBox"></div>
+    <input id="chatName" placeholder="Name">
+    <input id="chatMessage" placeholder="Message">
+    <button onclick="sendChat()">Send</button>
+  </div>
+
+  <!-- GIFTS -->
+  <div id="donatePage" class="page" style="display:none;">
+    <h2>🎁 Virtual Gift Cards</h2>
+    <input id="giftName" placeholder="Your name">
+    <textarea id="giftCode" placeholder="Amazon - XXXX"></textarea>
+    <button onclick="submitGift()">Submit</button>
+    <div id="giftList"></div>
+  </div>
+
+  <!-- DISCORD -->
+  <div id="discordPage" class="page" style="display:none;">
+    <h2>Join our Discord!</h2>
+    <a href="https://discord.gg/rZqvejPRvx" target="_blank">Join Discord</a>
+  </div>
+
+  <!-- DEV TOOLS -->
+  <div id="byodLogin" style="display:none;">
+    <h2>Developer Tools</h2>
+    <input type="password" id="byodPass" placeholder="Enter password">
+    <br><br>
+    <button onclick="checkByodPass()">Enter</button>
+    <p id="byodError"></p>
+  </div>
+
+  <div id="byodPanel" style="display:none;">
+    <h2>BYOD Panel</h2>
+    <button onclick="launchByod()">Launch BYOD Site</button>
+  </div>
+
 </div>
 
-<!-- CHAT -->
-<div id="chatPage" class="page">
-  <div id="chatBox"></div>
-  <input id="chatName" placeholder="Name">
-  <input id="chatMessage" placeholder="Message">
-  <button onclick="sendChat()">Send</button>
-</div>
-
-<!-- GIFTS -->
-<div id="donatePage" class="page">
-  <h2>🎁 Virtual Gift Cards</h2>
-  <input id="giftName" placeholder="Your name">
-  <textarea id="giftCode" placeholder="Amazon - XXXX"></textarea>
-  <button onclick="submitGift()">Submit</button>
-  <div id="giftList"></div>
-</div>
-
-<!-- DISCORD -->
-<div id="discordPage" class="page">
-  <h2>Join our Discord!</h2>
-  <a href="https://discord.gg/rZqvejPRvx" target="_blank">🚀 Join Discord</a>
-</div>
-
-</main>
-</div>
-
-<!-- ✅ Correct JS path -->
 <script src="js/app.js"></script>
 
 </body>
