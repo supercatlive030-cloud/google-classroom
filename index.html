@@ -4,135 +4,368 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Cats Arcade</title>
-
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
 
-<header>
-  <h1>The Cats Arcade</h1>
-</header>
-
-<!-- CALCULATOR LOCK -->
-<div id="calcLock">
-  <h2>Calculator</h2>
-  <input id="calcDisplay" value="0" readonly>
-
-  <div class="calcGrid">
-    <button onclick="calcClear()">C</button>
-    <button onclick="calcInput('/')">÷</button>
-    <button onclick="calcInput('*')">×</button>
-    <button onclick="calcInput('-')">−</button>
-
-    <button onclick="calcInput('7')">7</button>
-    <button onclick="calcInput('8')">8</button>
-    <button onclick="calcInput('9')">9</button>
-    <button onclick="calcInput('+')">+</button>
-
-    <button onclick="calcInput('4')">4</button>
-    <button onclick="calcInput('5')">5</button>
-    <button onclick="calcInput('6')">6</button>
-    <button onclick="calcEnter()">=</button>
-
-    <button onclick="calcInput('1')">1</button>
-    <button onclick="calcInput('2')">2</button>
-    <button onclick="calcInput('3')">3</button>
-
-    <button class="zero" onclick="calcInput('0')">0</button>
+<!-- LOGIN PAGE -->
+<section id="loginPage" class="page active">
+  <div class="login-container">
+    <h1>The Cats Arcade</h1>
+    <div class="login-box">
+      <h2>Enter Password</h2>
+      <input type="password" id="passwordInput" placeholder="Enter password..." onkeypress="if(event.key==='Enter') login()">
+      <button onclick="login()">Login</button>
+      <p id="loginError" style="color: red; display:none;">Wrong password. Try again.</p>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- LOGIN -->
-<div id="loginScreen">
-  <h2>Enter Password</h2>
-  <form id="loginForm">
-    <input type="password" id="sitePassword">
-    <br><br>
-    <button type="submit">Enter</button>
-  </form>
-  <p id="loginError"></p>
-</div>
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none;">
+  <header>
+    <h1>The Cats Arcade</h1>
+    <div class="header-controls">
+      <button id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
+      <button onclick="showPage('settingsPage')" title="Settings">⚙️</button>
+    </div>
+  </header>
 
-<!-- MAIN SITE -->
-<div id="siteContent" style="display:none;">
-
-  <!-- NAV -->
   <nav>
-    <button onclick="showPage('gamesPage')">Home</button>
-    <button onclick="showPage('moviesPage')">Movies</button> <!-- ✅ NEW -->
-    <button onclick="showPage('chatPage')">Chat</button>
-    <button onclick="showPage('donatePage')">Gifts</button>
-    <button onclick="showPage('discordPage')">Discord</button>
-    <button onclick="openByodLogin()">Dev Tools</button>
+    <button onclick="showPage('homePage')">Home</button>
+    <button onclick="showPage('gamesPage')">Games</button>
+    <button onclick="showPage('aiPage')">AI Chat</button>
+    <button onclick="showPage('browserPage')">Browser</button>
   </nav>
 
-  <!-- HOME / GAMES -->
-  <div id="gamesPage" class="page" style="display:none;">
-    <input id="gameSearch" placeholder="Search..." oninput="searchGames()">
-    <button onclick="randomGame()">Random</button>
-    <div id="games"></div>
-    <div id="player"><p>No game loaded.</p></div>
-  </div>
+  <!-- HOME PAGE -->
+  <section id="homePage" class="page">
+    <h2>Welcome to The Cats Arcade</h2>
+    <p>Choose a game or feature from the tabs above!</p>
+  </section>
 
-  <!-- 🎬 MOVIES PAGE (NEW) -->
-  <div id="moviesPage" class="page" style="display:none;">
-    <h2>🎬 Movies and More!</h2>
+  <!-- GAMES PAGE -->
+  <section id="gamesPage" class="page" style="display:none;">
+    <h2>Games</h2>
+    <div id="gamesGrid" class="grid"></div>
+  </section>
 
-    <p>Watch movies or listen to music:</p>
+  <!-- AI CHAT PAGE -->
+  <section id="aiPage" class="page" style="display:none;">
+    <h2>AI Chat Assistant</h2>
+    <div id="chatBox" class="chat-box">
+      <div id="chatMessages" class="chat-messages">
+        <div class="chat-message bot">Hello! I'm your AI assistant. How can I help you today?</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </section>
 
-    <div style="margin-top:20px;">
-      <button onclick="openSite('https://www.cineby.sc/')">
-        🎥 Watch Movies
-      </button>
+  <!-- BROWSER PAGE -->
+  <section id="browserPage" class="page" style="display:none; flex-direction:column; height:100vh;">
+    <div class="browser-header">The Cats Browser</div>
+
+    <div id="fakeBrowserWindow">
+      <span id="browserStatus">Type a site below</span>
     </div>
 
-    <div style="margin-top:10px;">
-      <button onclick="openSite('https://playlistsound.com/')">
-        🎵 Listen to Music
-      </button>
+    <div class="browser-buttons">
+      <button onclick="openFake('https://www.youtube.com')">YouTube</button>
+      <button onclick="openFake('https://www.google.com')">Google</button>
+      <button onclick="openFake('https://www.netflix.com')">Netflix</button>
+      <button onclick="openFake('https://www.roblox.com')">Roblox</button>
     </div>
-  </div>
 
-  <!-- CHAT -->
-  <div id="chatPage" class="page" style="display:none;">
-    <div id="chatBox"></div>
-    <input id="chatName" placeholder="Name">
-    <input id="chatMessage" placeholder="Message">
-    <button onclick="sendChat()">Send</button>
-  </div>
+    <div class="browser-input">
+      <input type="text" id="browserUrl" placeholder="Enter website…">
+      <button onclick="goFake()">Go</button>
+    </div>
+  </section>
 
-  <!-- GIFTS -->
-  <div id="donatePage" class="page" style="display:none;">
-    <h2>🎁 Virtual Gift Cards</h2>
-    <input id="giftName" placeholder="Your name">
-    <textarea id="giftCode" placeholder="Amazon - XXXX"></textarea>
-    <button onclick="submitGift()">Submit</button>
-    <div id="giftList"></div>
-  </div>
+  <!-- SETTINGS PAGE -->
+  <section id="settingsPage" class="page" style="display:none;">
+    <h2>Settings</h2>
+    <div class="settings-container">
+      <div class="setting">
+        <h3>Theme Color</h3>
+        <select id="themeColorSelect" onchange="changeThemeColor(this.value)">
+          <option value="default">Default (Dark Blue)</option>
+          <option value="purple">Purple</option>
+          <option value="green">Green</option>
+          <option value="red">Red</option>
+          <option value="orange">Orange</option>
+        </select>
+      </div>
 
-  <!-- DISCORD -->
-  <div id="discordPage" class="page" style="display:none;">
-    <h2>Join our Discord!</h2>
-    <a href="https://discord.gg/rZqvejPRvx" target="_blank">Join Discord</a>
-  </div>
+      <div class="setting">
+        <h3>Dark/Light Mode</h3>
+        <button onclick="toggleTheme()">Current: <span id="themeLabel">Dark Mode</span></button>
+      </div>
 
-  <!-- DEV TOOLS -->
-  <div id="byodLogin" style="display:none;">
-    <h2>Developer Tools</h2>
-    <input type="password" id="byodPass" placeholder="Enter password">
-    <br><br>
-    <button onclick="checkByodPass()">Enter</button>
-    <p id="byodError"></p>
-  </div>
+      <div class="setting">
+        <h3>Sound</h3>
+        <button id="soundToggle" onclick="toggleSound()">Sound: <span id="soundLabel">ON</span></button>
+      </div>
 
-  <div id="byodPanel" style="display:none;">
-    <h2>BYOD Panel</h2>
-    <button onclick="launchByod()">Launch BYOD Site</button>
-  </div>
-
+      <div class="setting">
+        <h3>Panic Button</h3>
+        <button class="panic-btn" onclick="panicMode()">🚨 PANIC 🚨</button>
+        <p style="font-size: 12px; color: #888;">Hides the site and shows a fake webpage</p>
+      </div>
+    </div>
+  </section>
 </div>
 
-<script src="js/app.js"></script>
+<!-- UPDATE POPUP -->
+<div id="updatePopup" class="popup" style="display:none;">
+  <div class="popup-content">
+    <span class="close" onclick="closeUpdatePopup()">&times;</span>
+    <h2>✨ Latest Updates</h2>
+    <ul>
+      <li>✅ Added smooth hover animations for game cards</li>
+      <li>✅ Dark/Light mode toggle with CSS variables</li>
+      <li>✅ Robotic voice announcement</li>
+      <li>✅ Settings page with theme, sound, and panic button</li>
+      <li>✅ AI Chat Assistant</li>
+      <li>✅ Password protection</li>
+      <li>✅ Enhanced UI and animations</li>
+    </ul>
+    <button onclick="closeUpdatePopup()">Got it!</button>
+  </div>
+</div>
+
+<script>
+// --------- SETTINGS & THEME ---------
+const DEFAULT_PASSWORD = "012312";
+let soundEnabled = true;
+let currentTheme = localStorage.getItem('theme') || 'dark';
+let currentColor = localStorage.getItem('themeColor') || 'default';
+
+// Initialize theme and color
+window.addEventListener('DOMContentLoaded', () => {
+  if (currentTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.getElementById('themeToggle').textContent = '☀️';
+    document.getElementById('themeLabel').textContent = 'Light Mode';
+  }
+  applyThemeColor(currentColor);
+  playStartupSound();
+});
+
+function login() {
+  const password = document.getElementById('passwordInput').value;
+  if (password === DEFAULT_PASSWORD) {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('updatePopup').style.display = 'block';
+    }, 500);
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  localStorage.setItem('theme', currentTheme);
+  
+  const toggle = document.getElementById('themeToggle');
+  const label = document.getElementById('themeLabel');
+  
+  if (currentTheme === 'light') {
+    toggle.textContent = '☀️';
+    label.textContent = 'Light Mode';
+  } else {
+    toggle.textContent = '🌙';
+    label.textContent = 'Dark Mode';
+  }
+}
+
+function changeThemeColor(color) {
+  currentColor = color;
+  localStorage.setItem('themeColor', color);
+  applyThemeColor(color);
+}
+
+function applyThemeColor(color) {
+  const root = document.documentElement;
+  const colors = {
+    default: { primary: '#333', secondary: '#444', accent: '#555' },
+    purple: { primary: '#2a1a4a', secondary: '#3a2a5a', accent: '#6a5a9a' },
+    green: { primary: '#1a3a1a', secondary: '#2a5a2a', accent: '#4a8a4a' },
+    red: { primary: '#4a1a1a', secondary: '#6a2a2a', accent: '#8a4a4a' },
+    orange: { primary: '#4a2a1a', secondary: '#6a3a2a', accent: '#8a5a3a' }
+  };
+  
+  const scheme = colors[color];
+  root.style.setProperty('--primary-bg', scheme.primary);
+  root.style.setProperty('--secondary-bg', scheme.secondary);
+  root.style.setProperty('--accent-color', scheme.accent);
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  const label = document.getElementById('soundLabel');
+  label.textContent = soundEnabled ? 'ON' : 'OFF';
+}
+
+function playStartupSound() {
+  if (soundEnabled && 'speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance("The Cats Arcade");
+    utterance.rate = 0.8;
+    utterance.pitch = 0.8;
+    speechSynthesis.speak(utterance);
+  }
+}
+
+function closeUpdatePopup() {
+  document.getElementById('updatePopup').style.display = 'none';
+}
+
+function panicMode() {
+  if (soundEnabled) {
+    const utterance = new SpeechSynthesisUtterance("Panic mode activated");
+    speechSynthesis.speak(utterance);
+  }
+  window.location.href = 'https://www.google.com';
+}
+
+// --------- PAGE SWITCHING ---------
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById(pageId).style.display = 'block';
+
+  if (pageId === 'gamesPage') {
+    loadGames();
+  }
+}
+
+// --------- GAMES ---------
+const games = [
+  { title: "Retro Bowl", path: "games/retro-bowl/index.html" },
+  { title: "Example Ball", path: "games/example-ball/index.html" },
+  { title: "Chroma", path: "games/chroma/index.html" },
+  { title: "Geometry Dash", path: "games/geometry-dash/index.html" },
+  { title: "Pacman", path: "games/pacman/index.html" },
+  { title: "2048", path: "games/2048/index.html" },
+  { title: "Slope", path: "games/slope/index.html" },
+  { title: "Slope 2", path: "games/slope-2/index.html" },
+  { title: "Cookie Clicker", path: "games/cookie-clicker/index.html" },
+  { title: "Doodle Jump", path: "games/doodle-jump/index.html" },
+  { title: "FNF Week 6", path: "games/fnf-week6/index.html" },
+  { title: "Friday Night Funkin", path: "games/friday-night-funkin/index.html" },
+  { title: "Moto Classic", path: "games/moto-classic/index.html" },
+  { title: "Moto Winter", path: "games/moto-winter/index.html" },
+  { title: "Zombs Royale", path: "games/zombsroyale/index.html" }
+];
+
+function loadGames() {
+  const grid = document.getElementById('gamesGrid');
+  grid.innerHTML = '';
+
+  games.forEach(game => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${game.title}</h3>
+      <a href="${game.path}" target="_blank" onclick="playSound()">Play</a>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// --------- AI CHAT ---------
+function sendMessage() {
+  const input = document.getElementById('userInput');
+  const message = input.value.trim();
+  
+  if (!message) return;
+
+  const chatMessages = document.getElementById('chatMessages');
+  
+  // Add user message
+  const userMsg = document.createElement('div');
+  userMsg.className = 'chat-message user';
+  userMsg.textContent = message;
+  chatMessages.appendChild(userMsg);
+  
+  input.value = '';
+
+  // Simulate AI response
+  setTimeout(() => {
+    const botMsg = document.createElement('div');
+    botMsg.className = 'chat-message bot';
+    botMsg.textContent = getAIResponse(message);
+    chatMessages.appendChild(botMsg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }, 500);
+  
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function getAIResponse(message) {
+  const lowerMsg = message.toLowerCase();
+  
+  if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+    return "Hi there! Welcome to The Cats Arcade. How can I help?";
+  } else if (lowerMsg.includes('game')) {
+    return "We have 15 awesome games! Go to the Games tab to check them out.";
+  } else if (lowerMsg.includes('help')) {
+    return "I can help you with information about games, settings, or just chat!";
+  } else if (lowerMsg.includes('cat')) {
+    return "🐱 Meow! Cats are awesome, and so is this arcade!";
+  } else if (lowerMsg.includes('password')) {
+    return "I can't help with that, but the password is a simple 4-digit number... 😉";
+  } else {
+    const responses = [
+      "That's interesting! Tell me more.",
+      "Cool! Anything else you'd like to know?",
+      "I'm learning! Thanks for chatting with me.",
+      "That sounds fun! Want to play a game instead?",
+      "I like your style!"
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+}
+
+function playSound() {
+  if (soundEnabled) {
+    const utterance = new SpeechSynthesisUtterance("Loading game");
+    speechSynthesis.speak(utterance);
+  }
+}
+
+// --------- FAKE BROWSER ---------
+function openFake(url) {
+  document.getElementById('browserStatus').textContent = 'Loading ' + url + '...';
+  setTimeout(() => {
+    loadInBrowser(url);
+  }, 500);
+}
+
+function loadInBrowser(url) {
+  let browserWindow = document.getElementById('fakeBrowserWindow');
+  browserWindow.innerHTML = '<iframe src="about:blank" style="width:100%; height:100%; border:none;"></iframe>';
+  let iframe = browserWindow.querySelector('iframe');
+  iframe.src = url;
+  document.getElementById('browserStatus').textContent = 'Loaded: ' + url;
+}
+
+function goFake() {
+  let url = document.getElementById('browserUrl').value.trim();
+  if (!url) return;
+
+  if (!url.startsWith('http')) {
+    url = 'https://' + url;
+  }
+
+  loadInBrowser(url);
+}
+</script>
 
 </body>
 </html>
