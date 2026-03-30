@@ -95,9 +95,17 @@
       <span class="button-icon">💬</span>
       <span>AI Chat</span>
     </button>
-    <button class="nav-button cat-button" onclick="showPage('browserPage')">
+    <button class="nav-button cat-button" onclick="showPage('proxyPage')">
       <span class="button-icon">🌐</span>
-      <span>Browser</span>
+      <span>Proxy</span>
+    </button>
+    <button class="nav-button cat-button" onclick="showPage('requestPage')">
+      <span class="button-icon">📝</span>
+      <span>Requests</span>
+    </button>
+    <button class="nav-button cat-button" onclick="showPage('supportPage')">
+      <span class="button-icon">❤️</span>
+      <span>Support</span>
     </button>
   </nav>
 
@@ -143,10 +151,20 @@
       </div>
       <div class="dashboard-card" style="animation-delay: 0.3s;">
         <div class="card-icon">🌐</div>
-        <h3>Browser</h3>
-        <p>Browse the web safely</p>
+        <h3>Proxy</h3>
+        <p>Access websites via proxy</p>
       </div>
       <div class="dashboard-card" style="animation-delay: 0.4s;">
+        <div class="card-icon">📝</div>
+        <h3>Game Requests</h3>
+        <p>Request games or report bugs</p>
+      </div>
+      <div class="dashboard-card" style="animation-delay: 0.5s;">
+        <div class="card-icon">❤️</div>
+        <h3>Support Us</h3>
+        <p>Help keep the arcade running</p>
+      </div>
+      <div class="dashboard-card" style="animation-delay: 0.6s;">
         <div class="card-icon">⚙️</div>
         <h3>Settings</h3>
         <p>Customize your experience</p>
@@ -175,24 +193,107 @@
     </div>
   </section>
 
-  <!-- BROWSER PAGE -->
-  <section id="browserPage" class="page" style="display:none; flex-direction:column; height:100vh;">
-    <div class="browser-header">The Cats Browser</div>
+  <!-- PROXY PAGE -->
+  <section id="proxyPage" class="page" style="display:none; flex-direction:column; height:100vh;">
+    <div class="proxy-header">The Cats Proxy</div>
 
-    <div id="fakeBrowserWindow">
-      <span id="browserStatus">Type a site below</span>
+    <div id="fakeProxyWindow">
+      <span id="proxyStatus">Enter a URL below</span>
     </div>
 
-    <div class="browser-buttons">
+    <div class="proxy-buttons">
       <button onclick="openFake('https://www.youtube.com')">YouTube</button>
       <button onclick="openFake('https://www.google.com')">Google</button>
       <button onclick="openFake('https://www.netflix.com')">Netflix</button>
       <button onclick="openFake('https://www.roblox.com')">Roblox</button>
     </div>
 
-    <div class="browser-input">
-      <input type="text" id="browserUrl" placeholder="Enter website…">
-      <button onclick="goFake()">Go</button>
+    <div class="proxy-input">
+      <input type="text" id="proxyUrl" placeholder="Enter URL…">
+      <button onclick="goProxy()">Go</button>
+    </div>
+  </section>
+
+  <!-- GAME REQUEST/BUG REPORT PAGE -->
+  <section id="requestPage" class="page" style="display:none;">
+    <h2 class="page-title">📝 Game Requests & Bug Reports</h2>
+    <p class="page-subtitle">Help us improve the arcade!</p>
+    
+    <div class="form-container">
+      <form onsubmit="submitRequest(event)" class="neon-form">
+        <div class="form-group">
+          <label for="requestType">Type</label>
+          <select id="requestType" required>
+            <option value="">Select Type</option>
+            <option value="game-request">Game Request</option>
+            <option value="bug-report">Bug Report</option>
+            <option value="feedback">General Feedback</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="requestTitle">Title</label>
+          <input type="text" id="requestTitle" placeholder="Brief title..." required>
+        </div>
+        
+        <div class="form-group">
+          <label for="requestMessage">Message</label>
+          <textarea id="requestMessage" placeholder="Tell us more..." rows="4" required></textarea>
+        </div>
+        
+        <button type="submit" class="glowing-button">Submit Request</button>
+      </form>
+    </div>
+
+    <div class="requests-list-container">
+      <h3>Recent Requests:</h3>
+      <div id="requestsList" class="requests-list">
+        <p style="color: #888; text-align: center;">No requests yet. Be the first!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORT PAGE -->
+  <section id="supportPage" class="page" style="display:none;">
+    <h2 class="page-title">❤️ Support Us</h2>
+    <p class="page-subtitle">Help keep the Cats Arcade running!</p>
+    
+    <div class="support-message">
+      <p class="support-text">
+        🎮 Hey guys, if y'all wanna support me, you can! I accept:
+      </p>
+      <ul class="support-list">
+        <li>💳 Amazon Gift Cards</li>
+        <li>🎮 Steam Gift Cards</li>
+        <li>🎯 Fortnite V-Bucks</li>
+        <li>🏗️ Roblox Robux</li>
+        <li>🍔 Fast-Food Gift Cards</li>
+      </ul>
+      <p class="support-footer">Your support means everything to us! 🐱💚</p>
+    </div>
+
+    <div class="form-container">
+      <h3 style="text-align: center; color: #00ff88; margin-bottom: 20px;">💌 Send a Message</h3>
+      <form onsubmit="submitSupportMessage(event)" class="neon-form">
+        <div class="form-group">
+          <label for="supportName">Your Name</label>
+          <input type="text" id="supportName" placeholder="Your name..." required>
+        </div>
+        
+        <div class="form-group">
+          <label for="supportMessage">Message</label>
+          <textarea id="supportMessage" placeholder="Leave us a message..." rows="4" required></textarea>
+        </div>
+        
+        <button type="submit" class="glowing-button">Send Message</button>
+      </form>
+    </div>
+
+    <div class="support-messages-container">
+      <h3>Messages of Support:</h3>
+      <div id="supportMessagesList" class="support-messages-list">
+        <p style="color: #888; text-align: center;">No messages yet. Be the first to support us!</p>
+      </div>
     </div>
   </section>
 
@@ -271,6 +372,21 @@ function login() {
   if (password === DEFAULT_PASSWORD) {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('mainApp').style.display = 'block';
+    
+    // Update header text to Google Schoology
+    const headerH1 = document.querySelector('.glassmorphic-header h1');
+    if (headerH1) {
+      headerH1.textContent = 'Google Schoology';
+      
+      // Announce unlock with speech synthesis
+      if (soundEnabled && 'speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance('Google Schoology');
+        utterance.rate = 0.8;
+        utterance.pitch = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+    }
+    
     setTimeout(() => {
       document.getElementById('updatePopup').style.display = 'block';
     }, 500);
@@ -349,7 +465,7 @@ function panicMode() {
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
   const page = document.getElementById(pageId);
-  if (pageId === 'browserPage') {
+  if (pageId === 'proxyPage') {
     page.style.display = 'flex';
   } else {
     page.style.display = 'block';
@@ -455,32 +571,144 @@ function playSound() {
   }
 }
 
-// --------- FAKE BROWSER ---------
+// --------- PROXY PAGE ---------
 function openFake(url) {
-  document.getElementById('browserStatus').textContent = 'Loading ' + url + '...';
+  document.getElementById('proxyStatus').textContent = 'Loading ' + url + '...';
   setTimeout(() => {
-    loadInBrowser(url);
+    loadInProxy(url);
   }, 500);
 }
 
-function loadInBrowser(url) {
-  let browserWindow = document.getElementById('fakeBrowserWindow');
-  browserWindow.innerHTML = '<iframe src="about:blank" style="width:100%; height:100%; border:none;"></iframe>';
-  let iframe = browserWindow.querySelector('iframe');
+function loadInProxy(url) {
+  let proxyWindow = document.getElementById('fakeProxyWindow');
+  proxyWindow.innerHTML = '<iframe src="about:blank" style="width:100%; height:100%; border:none;"></iframe>';
+  let iframe = proxyWindow.querySelector('iframe');
   iframe.src = url;
-  document.getElementById('browserStatus').textContent = 'Loaded: ' + url;
+  document.getElementById('proxyStatus').textContent = 'Loaded: ' + url;
 }
 
-function goFake() {
-  let url = document.getElementById('browserUrl').value.trim();
+function goProxy() {
+  let url = document.getElementById('proxyUrl').value.trim();
   if (!url) return;
 
   if (!url.startsWith('http')) {
     url = 'https://' + url;
   }
 
-  loadInBrowser(url);
+  loadInProxy(url);
 }
+
+// --------- GAME REQUESTS & BUG REPORTS ---------
+function submitRequest(e) {
+  e.preventDefault();
+  
+  const type = document.getElementById('requestType').value;
+  const title = document.getElementById('requestTitle').value;
+  const message = document.getElementById('requestMessage').value;
+  
+  // Get existing requests from localStorage
+  let requests = JSON.parse(localStorage.getItem('gameRequests')) || [];
+  
+  // Add new request
+  const newRequest = {
+    id: Date.now(),
+    type: type,
+    title: title,
+    message: message,
+    date: new Date().toLocaleDateString()
+  };
+  
+  requests.unshift(newRequest);
+  localStorage.setItem('gameRequests', JSON.stringify(requests));
+  
+  // Reset form
+  document.getElementById('requestType').value = '';
+  document.getElementById('requestTitle').value = '';
+  document.getElementById('requestMessage').value = '';
+  
+  // Refresh display
+  displayRequests();
+  
+  // Show success feedback
+  playSoundEffect('unlock');
+  alert('Thank you for your request! 🐱');
+}
+
+function displayRequests() {
+  const requests = JSON.parse(localStorage.getItem('gameRequests')) || [];
+  const list = document.getElementById('requestsList');
+  
+  if (requests.length === 0) {
+    list.innerHTML = '<p style="color: #888; text-align: center;">No requests yet. Be the first!</p>';
+    return;
+  }
+  
+  list.innerHTML = requests.map(req => `
+    <div class="request-item">
+      <span class="request-type">${req.type.replace('-', ' ').toUpperCase()}</span>
+      <div class="request-title">${req.title}</div>
+      <div class="request-message">${req.message}</div>
+      <div class="request-date">📅 ${req.date}</div>
+    </div>
+  `).join('');
+}
+
+// --------- SUPPORT PAGE ---------
+function submitSupportMessage(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('supportName').value;
+  const message = document.getElementById('supportMessage').value;
+  
+  // Get existing messages from localStorage
+  let messages = JSON.parse(localStorage.getItem('supportMessages')) || [];
+  
+  // Add new message
+  const newMessage = {
+    id: Date.now(),
+    name: name,
+    message: message,
+    date: new Date().toLocaleDateString()
+  };
+  
+  messages.unshift(newMessage);
+  localStorage.setItem('supportMessages', JSON.stringify(messages));
+  
+  // Reset form
+  document.getElementById('supportName').value = '';
+  document.getElementById('supportMessage').value = '';
+  
+  // Refresh display
+  displaySupportMessages();
+  
+  // Show success feedback
+  playSoundEffect('unlock');
+  alert('Thank you so much for your support! 🐱❤️');
+}
+
+function displaySupportMessages() {
+  const messages = JSON.parse(localStorage.getItem('supportMessages')) || [];
+  const list = document.getElementById('supportMessagesList');
+  
+  if (messages.length === 0) {
+    list.innerHTML = '<p style="color: #888; text-align: center;">No messages yet. Be the first to support us!</p>';
+    return;
+  }
+  
+  list.innerHTML = messages.map(msg => `
+    <div class="support-message-item">
+      <div class="message-author">💌 ${msg.name}</div>
+      <div class="message-text">${msg.message}</div>
+      <div class="request-date">📅 ${msg.date}</div>
+    </div>
+  `).join('');
+}
+
+// Initialize forms on page load
+window.addEventListener('load', () => {
+  displayRequests();
+  displaySupportMessages();
+});
 </script>
 
 <script src="./js/app.js"></script>
