@@ -21,33 +21,144 @@
   </div>
 </section>
 
+<!-- ===== NEON ANIMATED BACKGROUND ===== -->
+<div class="neon-background">
+  <!-- Gradient layers -->
+  <div class="gradient-layer layer-1"></div>
+  <div class="gradient-layer layer-2"></div>
+  <div class="gradient-layer layer-3"></div>
+  
+  <!-- Drifting cat shapes -->
+  <svg class="drifting-cats" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <g class="cat-shape cat-1">
+      <circle cx="30" cy="30" r="15" opacity="0.15"/>
+      <polygon points="30,15 25,10 35,10" opacity="0.15"/>
+    </g>
+    <g class="cat-shape cat-2">
+      <circle cx="70" cy="50" r="12" opacity="0.1"/>
+      <polygon points="70,35 65,30 75,30" opacity="0.1"/>
+    </g>
+    <g class="cat-shape cat-3">
+      <circle cx="50" cy="75" r="18" opacity="0.12"/>
+      <polygon points="50,55 45,50 55,50" opacity="0.12"/>
+    </g>
+  </svg>
+  
+  <!-- Pawprint particles -->
+  <div class="pawprint-container"></div>
+  
+  <!-- Cursor trail particles -->
+  <canvas id="cursorTrail"></canvas>
+</div>
+
+<!-- ===== PARALLAX BACKGROUND (KEPT FOR COMPATIBILITY) ===== -->
+<div class="parallax-bg" style="display: none;">
+  <div class="stars" style="--layer: 1;"></div>
+  <div class="stars" style="--layer: 2;"></div>
+  <div class="stars" style="--layer: 3;"></div>
+  <div class="neon-shape shape1"></div>
+  <div class="neon-shape shape2"></div>
+  <div class="neon-shape shape3"></div>
+</div>
+
+<!-- LOADING ANIMATION -->
+<div id="gameLoadingOverlay" class="loading-overlay" style="display:none;">
+  <div class="neon-loader">
+    <div class="loader-ring"></div>
+    <div class="loader-text">Loading Game...</div>
+  </div>
+</div>
+
 <!-- MAIN APP -->
 <div id="mainApp" style="display:none;">
-  <header>
-    <h1>The Cats Arcade</h1>
+  <header class="glassmorphic-header">
+    <div class="header-left">
+      <div class="cat-logo">🐱</div>
+      <h1>The Cats Arcade</h1>
+    </div>
     <div class="header-controls">
-      <button id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
-      <button onclick="showPage('settingsPage')" title="Settings">⚙️</button>
+      <button id="themeToggle" class="icon-button glowing-button" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
+      <button onclick="showPage('settingsPage')" class="icon-button glowing-button" title="Settings">⚙️</button>
     </div>
   </header>
 
-  <nav>
-    <button onclick="showPage('homePage')">Home</button>
-    <button onclick="showPage('gamesPage')">Games</button>
-    <button onclick="showPage('aiPage')">AI Chat</button>
-    <button onclick="showPage('browserPage')">Browser</button>
+  <nav class="glassmorphic-nav">
+    <button class="nav-button cat-button" onclick="showPage('homePage')">
+      <span class="button-icon">🏠</span>
+      <span>Home</span>
+    </button>
+    <button class="nav-button cat-button" onclick="showPage('gamesPage')">
+      <span class="button-icon">🎮</span>
+      <span>Games</span>
+    </button>
+    <button class="nav-button cat-button" onclick="showPage('aiPage')">
+      <span class="button-icon">💬</span>
+      <span>AI Chat</span>
+    </button>
+    <button class="nav-button cat-button" onclick="showPage('browserPage')">
+      <span class="button-icon">🌐</span>
+      <span>Browser</span>
+    </button>
   </nav>
 
-  <!-- HOME PAGE -->
-  <section id="homePage" class="page">
-    <h2>Welcome to The Cats Arcade</h2>
-    <p>Choose a game or feature from the tabs above!</p>
+  <!-- ANIMATED CAT ASSISTANT -->
+  <div id="catAssistant" class="cat-assistant" onclick="toggleCatPanel()">
+    <div class="cat-body">
+      <div class="cat-head">
+        <div class="cat-ear left"></div>
+        <div class="cat-ear right"></div>
+        <div class="cat-eye left"></div>
+        <div class="cat-eye right"></div>
+        <div class="cat-nose"></div>
+      </div>
+      <div class="cat-text">Meow!</div>
+    </div>
+  </div>
+
+  <!-- CAT ASSISTANT PANEL -->
+  <div id="catPanel" class="cat-panel" style="display:none;">
+    <div class="cat-panel-header">
+      <h3>🐱 Cat Facts</h3>
+      <button onclick="toggleCatPanel()" class="close-btn">✕</button>
+    </div>
+    <div id="catFact" class="cat-fact">Click the cat for a fun fact!</div>
+    <button onclick="getNewCatFact()" class="cat-fact-btn">Get New Fact</button>
+  </div>
+
+  <!-- HOME PAGE - ANIMATED DASHBOARD -->
+  <section id="homePage" class="page page-dashboard dashboard">
+    <h2 class="dashboard-title">Welcome to The Cats Arcade</h2>
+    <p class="dashboard-subtitle">Your Portal to Endless Entertainment</p>
+    
+    <div class="dashboard-cards">
+      <div class="dashboard-card" style="animation-delay: 0.1s;">
+        <div class="card-icon">🎮</div>
+        <h3>50+ Games</h3>
+        <p>Discover amazing games</p>
+      </div>
+      <div class="dashboard-card" style="animation-delay: 0.2s;">
+        <div class="card-icon">💬</div>
+        <h3>AI Chat</h3>
+        <p>Chat with our assistant</p>
+      </div>
+      <div class="dashboard-card" style="animation-delay: 0.3s;">
+        <div class="card-icon">🌐</div>
+        <h3>Browser</h3>
+        <p>Browse the web safely</p>
+      </div>
+      <div class="dashboard-card" style="animation-delay: 0.4s;">
+        <div class="card-icon">⚙️</div>
+        <h3>Settings</h3>
+        <p>Customize your experience</p>
+      </div>
+    </div>
   </section>
 
   <!-- GAMES PAGE -->
   <section id="gamesPage" class="page" style="display:none;">
-    <h2>Games</h2>
-    <div id="gamesGrid" class="grid"></div>
+    <h2 class="games-title">🎮 Game Launcher</h2>
+    <p class="games-subtitle">Pick a game and play!</p>
+    <div id="gamesGrid" class="games-grid"></div>
   </section>
 
   <!-- AI CHAT PAGE -->
@@ -237,7 +348,12 @@ function panicMode() {
 // --------- PAGE SWITCHING ---------
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-  document.getElementById(pageId).style.display = 'block';
+  const page = document.getElementById(pageId);
+  if (pageId === 'browserPage') {
+    page.style.display = 'flex';
+  } else {
+    page.style.display = 'block';
+  }
 
   if (pageId === 'gamesPage') {
     loadGames();
@@ -367,5 +483,6 @@ function goFake() {
 }
 </script>
 
+<script src="./js/app.js"></script>
 </body>
 </html>
