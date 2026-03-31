@@ -95,10 +95,6 @@
       <span class="button-icon">💬</span>
       <span>AI Chat</span>
     </button>
-    <button class="nav-button cat-button" onclick="showPage('proxyPage')">
-      <span class="button-icon">🌐</span>
-      <span>Proxy</span>
-    </button>
     <button class="nav-button cat-button" onclick="showPage('requestPage')">
       <span class="button-icon">📝</span>
       <span>Requests</span>
@@ -149,11 +145,6 @@
         <h3>AI Chat</h3>
         <p>Chat with our assistant</p>
       </div>
-      <div class="dashboard-card" style="animation-delay: 0.3s;">
-        <div class="card-icon">🌐</div>
-        <h3>Proxy</h3>
-        <p>Access websites via proxy</p>
-      </div>
       <div class="dashboard-card" style="animation-delay: 0.4s;">
         <div class="card-icon">📝</div>
         <h3>Game Requests</h3>
@@ -190,27 +181,6 @@
         <input type="text" id="userInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()">
         <button onclick="sendMessage()">Send</button>
       </div>
-    </div>
-  </section>
-
-  <!-- PROXY PAGE -->
-  <section id="proxyPage" class="page" style="display:none; flex-direction:column; height:100vh;">
-    <div class="proxy-header">The Cats Proxy</div>
-
-    <div id="fakeProxyWindow">
-      <span id="proxyStatus">Enter a URL below</span>
-    </div>
-
-    <div class="proxy-buttons">
-      <button onclick="openFake('https://www.youtube.com')">YouTube</button>
-      <button onclick="openFake('https://www.google.com')">Google</button>
-      <button onclick="openFake('https://www.netflix.com')">Netflix</button>
-      <button onclick="openFake('https://www.roblox.com')">Roblox</button>
-    </div>
-
-    <div class="proxy-input">
-      <input type="text" id="proxyUrl" placeholder="Enter URL…">
-      <button onclick="goProxy()">Go</button>
     </div>
   </section>
 
@@ -569,33 +539,6 @@ function playSound() {
     const utterance = new SpeechSynthesisUtterance("Loading game");
     speechSynthesis.speak(utterance);
   }
-}
-
-// --------- PROXY PAGE ---------
-function openFake(url) {
-  document.getElementById('proxyStatus').textContent = 'Loading ' + url + '...';
-  setTimeout(() => {
-    loadInProxy(url);
-  }, 500);
-}
-
-function loadInProxy(url) {
-  let proxyWindow = document.getElementById('fakeProxyWindow');
-  proxyWindow.innerHTML = '<iframe src="about:blank" style="width:100%; height:100%; border:none;"></iframe>';
-  let iframe = proxyWindow.querySelector('iframe');
-  iframe.src = url;
-  document.getElementById('proxyStatus').textContent = 'Loaded: ' + url;
-}
-
-function goProxy() {
-  let url = document.getElementById('proxyUrl').value.trim();
-  if (!url) return;
-
-  if (!url.startsWith('http')) {
-    url = 'https://' + url;
-  }
-
-  loadInProxy(url);
 }
 
 // --------- GAME REQUESTS & BUG REPORTS ---------
