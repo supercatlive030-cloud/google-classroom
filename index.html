@@ -71,12 +71,26 @@
 
 <!-- MAIN APP -->
 <div id="mainApp" style="display:none;">
+  <!-- TEMPLATE GENERATOR PASSCODE MODAL -->
+  <div id="templatePasscodeModal" class="modal" style="display:none;">
+    <div class="modal-content template-modal" onclick="event.stopPropagation()">
+      <span class="close" onclick="closeTemplatePasscodeModal()">&times;</span>
+      <h2>🔐 Unlock Template Generator</h2>
+      <p>Enter the secret passcode to unlock</p>
+      <div class="passcode-group">
+        <input type="password" id="templatePasscode" placeholder="Enter passcode..." maxlength="4" onkeypress="if(event.key==='Enter') verifyTemplatePasscode()">
+        <button onclick="verifyTemplatePasscode()" class="unlock-btn">Unlock</button>
+      </div>
+      <p id="passcodeError" style="color: #ff1493; display:none; font-weight: bold; margin-top: 15px;">❌ Wrong passcode!</p>
+    </div>
+  </div>
   <header class="glassmorphic-header">
     <div class="header-left">
       <div class="cat-logo">🐱</div>
       <h1>The Cats Arcade</h1>
     </div>
     <div class="header-controls">
+      <button id="templateUnlock" class="icon-button glowing-button secret-btn" onclick="openTemplatePasscodeModal()" title="Secret Feature" style="font-size: 14px;">🔓</button>
       <button id="themeToggle" class="icon-button glowing-button" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
       <button onclick="showPage('settingsPage')" class="icon-button glowing-button" title="Settings">⚙️</button>
     </div>
@@ -102,6 +116,14 @@
     <button class="nav-button cat-button" onclick="showPage('supportPage')">
       <span class="button-icon">❤️</span>
       <span>Support</span>
+    </button>
+    <button class="nav-button cat-button" onclick="showPage('templatePage')">
+      <span class="button-icon">🎁</span>
+      <span>Template</span>
+    </button>
+    <button class="nav-button cat-button" onclick="showPage('historyPage')">
+      <span class="button-icon">📚</span>
+      <span>History</span>
     </button>
   </nav>
 
@@ -263,6 +285,73 @@
       <h3>Messages of Support:</h3>
       <div id="supportMessagesList" class="support-messages-list">
         <p style="color: #888; text-align: center;">No messages yet. Be the first to support us!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEMPLATE GENERATOR PAGE (PASSWORD PROTECTED) -->
+  <section id="templatePage" class="page" style="display:none;">
+    <h2 class="page-title">🎁 Template Generator</h2>
+    <p class="page-subtitle">Download or copy the complete website template</p>
+    
+    <div id="templatePasswordSection" class="template-container" style="text-align: center; padding: 40px;">
+      <h3>🔐 Enter Password</h3>
+      <input type="password" id="templatePassword" placeholder="Enter password..." style="padding: 10px; margin: 10px 0; font-size: 16px; border-radius: 5px; border: 2px solid #00ff88;" onkeypress="if(event.key==='Enter') {event.preventDefault(); verifyTemplatePassword();}">
+      <button onclick="verifyTemplatePassword(); return false;" class="glowing-button" style="margin: 10px 0; cursor: pointer;">Unlock</button>
+      <p id="templatePasswordError" style="color: #ff1493; display:none; margin-top: 15px;">❌ Wrong password!</p>
+    </div>
+    
+    <div id="templateContentSection" style="display:none;">
+      <div class="template-controls">
+        <button onclick="copyTemplateToClipboard()" class="template-btn copy-btn">
+          <span class="btn-icon">📋</span> Copy Template
+        </button>
+        <button onclick="downloadTemplateZip()" class="template-btn download-btn">
+          <span class="btn-icon">📦</span> Download Template (.zip)
+        </button>
+      </div>
+
+      <div class="template-preview">
+        <h3>Template Preview</h3>
+        <div class="code-preview">
+          <pre id="templateCode"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WEBSITE HISTORY PAGE -->
+  <section id="historyPage" class="page" style="display:none;">
+    <h2 class="page-title">📚 Website History</h2>
+    <p class="page-subtitle">The story of The Cats Arcade</p>
+    
+    <div class="history-container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+      <div class="history-entry">
+        <h3>🎮 The Beginning (Mid January 2026)</h3>
+        <p>In January of 2026, Micah had an idea of an unblocked games website. Fun fact: before the name "The Cats Arcade," the name was actually "tha games website" and it was all plain!</p>
+      </div>
+      
+      <div class="history-entry">
+        <h3>🚀 Early Development (Early February 2026)</h3>
+        <p>Early February, Micah started to create and make the prototype. It was all buggy but it was still a start.</p>
+      </div>
+      
+      <div class="history-entry">
+        <h3>✨ Modern Era (Mid to Late March 2026 - Present)</h3>
+        <p>Now with the prototype upgraded and super clean and playable, Micah is adding new games, features, and more! The Cats Arcade has become a fully functional unblocked games arcade with a thriving community.</p>
+      </div>
+
+      <div class="creator-section">
+        <div class="creator-content">
+          <div class="creator-image-container">
+            <img src="./creator.jpg" alt="Micah - Creator" class="creator-image" style="max-width: 200px; width: 100%; border-radius: 12px; border: 3px solid #00ff88; box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);">
+            <p style="color: #00ff88; margin-top: 10px; font-size: 12px;">Micah - Creator</p>
+          </div>
+          <div class="creator-bio">
+            <h3>🌟 The Creator</h3>
+            <p>"Hi, I'm Micah, and I am the creator of this website. I was inspired by Quasar for making The Cats Arcade. Fun fact: some of you probably already know this, but I started getting into unblocked games and started with Google Sites! Now that I know how to code, I can make these types of websites! Thank you to everybody who was playing or supporting the games. I would never think I would get this far! Thank you guys!"</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -651,6 +740,170 @@ function displaySupportMessages() {
 window.addEventListener('load', () => {
   displayRequests();
   displaySupportMessages();
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script>
+// --------- TEMPLATE GENERATOR ---------
+
+function openTemplatePasscodeModal() {
+  document.getElementById('templatePasscodeModal').style.display = 'flex';
+  document.getElementById('templatePasscode').value = '';
+  document.getElementById('templatePasscode').focus();
+  document.getElementById('passcodeError').style.display = 'none';
+}
+
+function closeTemplatePasscodeModal() {
+  document.getElementById('templatePasscodeModal').style.display = 'none';
+  document.getElementById('templatePasscode').value = '';
+  document.getElementById('passcodeError').style.display = 'none';
+}
+
+function verifyTemplatePasscode() {
+  const passcode = document.getElementById('templatePasscode').value.trim();
+  
+  if (passcode === "0231") {
+    closeTemplatePasscodeModal();
+    document.getElementById('templatePage').style.display = 'block';
+    document.querySelectorAll('.page').forEach(p => {
+      if (p.id !== 'templatePage') p.style.display = 'none';
+    });
+    loadTemplatePreview();
+    
+    if (typeof soundEnabled !== 'undefined' && soundEnabled && 'speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance('Template Generator Unlocked');
+      utterance.rate = 0.8;
+      speechSynthesis.speak(utterance);
+    }
+  } else {
+    document.getElementById('passcodeError').style.display = 'block';
+    document.getElementById('templatePasscode').value = '';
+    document.getElementById('templatePasscode').focus();
+  }
+}
+
+function loadTemplatePreview() {
+  const codeElement = document.getElementById('templateCode');
+  if (!codeElement) return;
+  
+  const templatePreviewText = `<!-- THE CATS ARCADE - BASIC TEMPLATE -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Cats Arcade</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <h1>The Cats Arcade</h1>
+  <p>Neon-themed arcade with games and animations</p>
+  <script src="./js/app.js"><\/script>
+</body>
+</html>
+
+/* CSS Variables */
+:root {
+  --primary-bg: #1a1a2e;
+  --accent-color: #00ff88;
+  --border-color: #00ff88;
+}
+
+body {
+  background: var(--primary-bg);
+  color: var(--accent-color);
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  border: 2px solid var(--border-color);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+}`;
+  
+  codeElement.textContent = templatePreviewText;
+}
+
+function copyTemplateToClipboard() {
+  const templateCode = document.getElementById('templateCode');
+  if (!templateCode) return;
+  
+  const code = templateCode.textContent;
+  
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    if (!btn) return;
+    
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="btn-icon">✅</span> Copied!';
+    btn.style.background = 'linear-gradient(135deg, #00ff88, #4a9d6f)';
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.style.background = 'linear-gradient(135deg, #00ff88, #00ccff)';
+    }, 2000);
+    
+    if (typeof soundEnabled !== 'undefined' && soundEnabled) {
+      const utterance = new SpeechSynthesisUtterance('Template copied to clipboard');
+      speechSynthesis.speak(utterance);
+    }
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+    alert('Failed to copy. Please try again.');
+  });
+}
+
+function downloadTemplateZip() {
+  if (typeof JSZip === 'undefined') {
+    alert('JSZip library not loaded. Try again in a moment.');
+    return;
+  }
+  
+  try {
+    const zip = new JSZip();
+    
+    // HTML content
+    const htmlContent = "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>The Cats Arcade</title>\n  <link rel=\"stylesheet\" href=\"./css/styles.css\">\n</head>\n<body>\n  <h1>The Cats Arcade</h1>\n  <p>Welcome to the template! Customize with your content.</p>\n  <script src=\"./js/app.js\"><\/script>\n</body>\n</html>";
+
+    // CSS content
+    const cssContent = ":root {\n  --primary-bg: #1a1a2e;\n  --secondary-bg: #16213e;\n  --accent-color: #00ff88;\n  --text-light: #fff;\n  --border-color: #00ff88;\n}\n\nbody {\n  background: var(--primary-bg);\n  color: var(--text-light);\n  font-family: Arial, sans-serif;\n  margin: 0;\n  padding: 20px;\n}\n\nh1 {\n  color: var(--accent-color);\n  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);\n}\n\n.card {\n  background: var(--secondary-bg);\n  border: 2px solid var(--border-color);\n  padding: 20px;\n  border-radius: 10px;\n  transition: all 0.3s ease;\n}\n\n.card:hover {\n  transform: scale(1.05);\n  box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);\n}";
+
+    // JavaScript content
+    const jsContent = "// The Cats Arcade - Main App\nconsole.log('Template Loaded!');\n\nfunction toggleTheme() {\n  const current = document.documentElement.getAttribute('data-theme');\n  const next = current === 'light' ? 'dark' : 'light';\n  document.documentElement.setAttribute('data-theme', next);\n}";
+
+    // README
+    const readmeContent = "# The Cats Arcade Template\n\nNeon-themed arcade website template.\n\n## Features\n- Glassmorphic design\n- Responsive layout\n- Dark/Light mode\n- Smooth animations\n\n## Getting Started\n1. Open index.html\n2. Customize CSS variables\n3. Add your content\n4. Deploy\n\n## License\nFree to use and modify!\n\nMeow!";
+
+    zip.file('index.html', htmlContent);
+    zip.folder('css').file('styles.css', cssContent);
+    zip.folder('js').file('app.js', jsContent);
+    zip.file('README.md', readmeContent);
+    
+    zip.generateAsync({type: 'blob'}).then(blob => {
+      saveAs(blob, 'TheCatsArcade-Template.zip');
+      
+      if (typeof soundEnabled !== 'undefined' && soundEnabled) {
+        const utterance = new SpeechSynthesisUtterance('Template downloaded');
+        speechSynthesis.speak(utterance);
+      }
+    });
+  } catch(err) {
+    console.error('Download error:', err);
+    alert('Error creating download. Please try again.');
+  }
+}
+
+// Close modal on background click
+window.addEventListener('click', (e) => {
+  const modal = document.getElementById('templatePasscodeModal');
+  if (modal && e.target === modal) {
+    closeTemplatePasscodeModal();
+  }
 });
 </script>
 
