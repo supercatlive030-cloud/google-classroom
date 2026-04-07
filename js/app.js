@@ -191,6 +191,10 @@ const catFacts = [
   "🐱 A group of cats is called a 'clowder'.",
   "🐱 Cats have excellent night vision, seeing in light levels 6 times lower than humans need.",
   "🐱 Ancient Egyptians shaved their eyebrows when their cats died as a sign of mourning."
+  "🐱A cat’s brain is biologically more similar to a human brain than it is to a dog’s."
+  "🐱cats cannot get canvities."
+  "🐱cats can have a very strong emotinal bond with their owners."
+  "🐱cats can survive landing on their feet up to 65 feet."
 ];
 
 // ---------- CAT ASSISTANT ----------
