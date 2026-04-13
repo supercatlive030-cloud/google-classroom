@@ -1,58 +1,54 @@
 [
-{
-"title": "Retro Bowl",
-"path": "games/retro-bowl/index.html"
-},
-{
-"title": "Example Ball",
-"path": "games/example-ball/index.html"
-},
-{
-"title": "Chroma",
-"path": "games/chroma/index.html"
-},
-{
-"title": "Geometry Dash",
-"path": "games/geometry-dash/index.html"
-},
-{
-"title": "Pacman",
-"path": "games/pacman/index.html"
-},
-{
-"title": "2048",
-"path": "games/2048/index.html"
-},
-{
-"title": "Slope",
-"path": "games/slope/index.html"
-},
-{
-"title": "Slope 2",
-"path": "games/slope-2/index.html"
-},
-{
-"title": "Cookie Game",
-"path": "games/cookie/index.html"
-},
-{
-"title": "Moto Classic",
-"path": "games/moto-classic/index.html"
-},
-{
-"title": "Moto Winter",
-"path": "games/moto-winter/index.html"
-},
-{
-"title": "Doodle Jump",
-"path": "games/doodle-jump/index.html"
-},
-{
-"title": "Friday Night Funkin",
-"path": "games/friday-night-funkin/index.html"
-},
-{
-"title": "Friday Night Funkin Week 6",
-"path": "games/fnf-week-6/index.html"
-}
+  {
+    "title": "Retro Bowl",
+    "path": "games/retro-bowl/index.html"
+  },
+  {
+    "title": "Example Ball",
+    "path": "games/example-ball/index.html"
+  },
+  {
+    "title": "Chroma",
+    "path": "games/chroma/index.html"
+  },
+  {
+    "title": "Geometry Dash",
+    "path": "games/geometry-dash/index.html"
+  },
+  {
+    "title": "Pacman",
+    "path": "games/pacman/index.html"
+  },
+  {
+    "title": "2048",
+    "path": "games/2048/index.html"
+  },
+  {
+    "title": "Slope",
+    "path": "games/slope/index.html"
+  },
+  {
+    "title": "Slope 2",
+    "path": "games/slope-2/index.html"
+  },
+  {
+    "title": "Cookie Game",
+    "path": "games/cookie/index.html"
+  },
+  {
+    "title": "Moto Classic",
+    "path": "games/moto-classic/index.html"
+  },
+  {
+    "title": "Moto Winter",
+    "path": "games/moto-winter/index.html"
+  },
+  {
+    "title": "Doodle Jump",
+    "path": "games/doodle-jump/index.html"
+  },
+  {
+    "title": "Friday Night Funkin",
+    "path": "games/friday-night-funkin/index.html"
+  }
 ]
